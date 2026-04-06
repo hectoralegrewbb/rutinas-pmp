@@ -30,7 +30,6 @@
     main::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
     main::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.3); border-radius: 3px; }
     main::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.5); }
-    
     .section { 
       background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(30,41,59,0.4));
       backdrop-filter: blur(10px);
@@ -40,11 +39,9 @@
       margin-bottom: 16px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    
     .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
     .field { display: flex; flex-direction: column; gap: 8px; }
     .label { font-size: 12px; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.9; }
-    
     select, input { 
       padding: 14px 16px;
       background: rgba(15,23,42,0.6);
@@ -61,8 +58,6 @@
       background: rgba(15,23,42,0.9);
       box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
-    
-
     .equipo { 
       background: rgba(15,23,42,0.6);
       border: 1px solid rgba(52,105,139,0.2);
@@ -73,7 +68,6 @@
     }
     .equipo:hover { border-color: rgba(16,185,129,0.3); box-shadow: 0 4px 16px rgba(16,185,129,0.1); }
     .equipo.abierto { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.05); }
-    
     .equipo-head { 
       display: flex; 
       justify-content: space-between; 
@@ -86,7 +80,6 @@
     }
     .equipo-head:active { background: rgba(16,185,129,0.08); }
     .equipo-nombre { font-weight: 600; font-size: 16px; letter-spacing: 0.2px; }
-    
     .equipo-toggle { 
       color: #10b981; 
       font-size: 22px;
@@ -94,13 +87,8 @@
       align-items: center;
     }
     .equipo.abierto .equipo-toggle { transform: rotate(180deg); }
-    
-    .equipo-body { 
-      display: none;
-      padding: 16px;
-    }
+    .equipo-body { display: none; padding: 16px; }
     .equipo.abierto .equipo-body { display: block; }
-    
     .checkpoint { 
       background: linear-gradient(135deg, rgba(30,41,59,0.6), rgba(30,41,59,0.3));
       border: 1.5px solid rgba(71,85,105,0.4);
@@ -120,7 +108,6 @@
       border-color: rgba(16,185,129,0.3);
       box-shadow: 0 4px 12px rgba(16,185,129,0.1);
     }
-    
     .check-header { 
       display: flex; 
       gap: 12px; 
@@ -138,15 +125,9 @@
       filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
     }
     .check-header input:checked { filter: drop-shadow(0 0 8px rgba(16,185,129,0.4)); }
-    
     .check-texto { font-size: 15px; flex: 1; line-height: 1.5; }
-    
-    .check-comment { 
-      display: none; 
-      margin-top: 10px;
-    }
+    .check-comment { display: none; margin-top: 10px; }
     .checkpoint.marcado .check-comment { display: block; }
-    
     .check-comment textarea { 
       width: 100%; 
       padding: 12px 14px; 
@@ -166,7 +147,6 @@
       background: rgba(26,35,50,0.9);
       box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
     }
-    
     .botones { 
       display: flex; 
       gap: 12px; 
@@ -177,7 +157,6 @@
       position: sticky;
       bottom: 0;
     }
-    
     button { 
       flex: 1;
       padding: 14px 20px; 
@@ -190,22 +169,18 @@
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-    
     button:active { transform: scale(0.97); }
     button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    
     .btn-guardar { 
       background: linear-gradient(135deg, #10b981, #059669);
       color: #fff;
       box-shadow: 0 4px 16px rgba(16,185,129,0.3);
     }
-    
     .btn-otro { 
       background: linear-gradient(135deg, #475569, #64748b);
       color: #e2e8f0;
       box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     }
-    
     footer { 
       background: rgba(15,23,42,0.8);
       backdrop-filter: blur(10px);
@@ -215,10 +190,8 @@
       font-size: 12px; 
       color: #64748b;
     }
-    
     .selector-linea { margin-bottom: 12px; }
     .selector-linea select { width: 100%; }
-    
     @media (max-width: 768px) { 
       .grid5 { grid-template-columns: 1fr; }
       .header h1 { font-size: 24px; }
@@ -240,8 +213,8 @@
   <footer>Pilares © 2026</footer>
 
   <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycbwPQp2kpqY66apGs0BEUoVftvi1gAvCRA7Qc9IaSGpDnOGiZj5WQAh2eU_DN3ky8gIeYQ/exec'
-    
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbwPQp2kpqY66apGs0BEUoVftvi1gAvCRA7Qc9IaSGpDnOGiZj5WQAh2eU_DN3ky8gIeYQ/exec';
+
     const LINEAS = {
       "Línea 1": [{nombre:"Amasadora",checks:["El equipo no funciona correctamente","Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero"]},{nombre:"Cortadora",checks:["El equipo no funciona correctamente","No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea y bujes presentan huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente"]},{nombre:"Dulcera",checks:["El equipo está funcionando correctamente","El equipo presenta pérdidas","Las mangueras se encuentran en buen estado","El pistón está funcionando correctamente","El buje que acopla el pistón con la válvula de inyectado está en buen estado"]},{nombre:"Cubo de dulce",checks:["El mezclador no está funcionando","El motor del mezclador presenta algún ruido extraño y/o huelgo","El reductor del mezclador no posee aceite y/o presenta pérdidas","La cadena precisa lubricación y/o posee desgaste","El reductor se encuentra con pérdidas de aceite","La bomba de transporte tiene pérdidas","La cañería de transporte presenta alguna pérdida"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","Micarta en mal estado"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Piñones en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro","Pérdidas de aceite en reductores"]},{nombre:"Detector de metales",checks:["El equipo no funciona correctamente","El indicador luminoso no está funcionando","Ruidos anormales","No está activado en el HMI el detector de metales y/o detectores de metales: parar marcha"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales"]}],
       "Línea 2": [{nombre:"Amasadora",checks:["Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero"]},{nombre:"Rotativa",checks:["Las protecciones no están colocadas","Lona en mal estado","Bujes están en mal estado","El equipo precisa lubricación","Las botoneras/pulsadores/selectoras funcionan correctamente","Poleas en mal estado, con huelgo o desperfectos","Cadenas/Correas en mal estado o con falta de lubricación"]},{nombre:"Cortadora",checks:["No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea presenta huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente"]},{nombre:"Azucarador",checks:["La sujeción del motovibrador está en mal estado","Tacos de goma en mal estado","Chapas de vibración en mal estado","Bandeja recuperadora de azúcar en mal estado"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","El extractor de aire requiere revisión","Micarta en mal estado"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Eje en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro"]},{nombre:"Detector de metales",checks:["No funciona correctamente el paro de emergencia","No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales"]}],
@@ -258,11 +231,11 @@
 
     let app = {
       linea: localStorage.getItem('linea') || 'Línea 1',
-      tecnico: localStorage.getItem('tecnico')||'',
-      supervisor: localStorage.getItem('supervisor')||'',
-      producto: localStorage.getItem('producto')||'',
-      datos: JSON.parse(localStorage.getItem('datos')||'{}'),
-      abiertos: JSON.parse(localStorage.getItem('abiertos')||'{}')
+      tecnico: localStorage.getItem('tecnico') || '',
+      supervisor: localStorage.getItem('supervisor') || '',
+      producto: localStorage.getItem('producto') || '',
+      datos: JSON.parse(localStorage.getItem('datos') || '{}'),
+      abiertos: JSON.parse(localStorage.getItem('abiertos') || '{}')
     };
 
     function save() {
@@ -275,27 +248,18 @@
     }
 
     function updateBtnGuardar() {
-  const btn = document.getElementById('btnGuardar');
-  if (!btn) return;
-  btn.disabled = !app.tecnico || !app.supervisor;
-}
-
-    function vibratePhone() {
-      if (navigator.vibrate) {
-        navigator.vibrate(10);
-      }
+      const btn = document.getElementById('btnGuardar');
+      if (!btn) return;
+      btn.disabled = !app.tecnico || !app.supervisor;
     }
 
-    function toggleEquipo(ei) {
-      app.abiertos[ei] = !app.abiertos[ei];
-      vibratePhone();
-      save();
-      updateEquipo(ei);
+    function vibratePhone() {
+      if (navigator.vibrate) navigator.vibrate(10);
     }
 
     function toggleCheck(ei, ci) {
       if (!app.datos[ei]) app.datos[ei] = {};
-      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m:false, c:''};
+      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
       app.datos[ei][ci].m = !app.datos[ei][ci].m;
       vibratePhone();
       save();
@@ -304,7 +268,7 @@
 
     function updateComment(ei, ci, value) {
       if (!app.datos[ei]) app.datos[ei] = {};
-      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m:false, c:''};
+      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
       app.datos[ei][ci].c = value;
       save();
     }
@@ -313,32 +277,26 @@
       const checkEl = document.querySelector(`[data-checkpoint="${ei}-${ci}"]`);
       if (!checkEl) return;
       const d = app.datos[ei] && app.datos[ei][ci];
-      if (d && d.m) {
-        checkEl.classList.add('marcado');
-      } else {
-        checkEl.classList.remove('marcado');
-      }
+      if (d && d.m) checkEl.classList.add('marcado');
+      else checkEl.classList.remove('marcado');
     }
 
     function toggleEquipoDOM(ei) {
       const equipoEl = document.querySelector(`[data-equipo="${ei}"]`);
       if (!equipoEl) return;
-      if (app.abiertos[ei]) {
-        equipoEl.classList.add('abierto');
-      } else {
-        equipoEl.classList.remove('abierto');
-      }
+      if (app.abiertos[ei]) equipoEl.classList.add('abierto');
+      else equipoEl.classList.remove('abierto');
     }
 
     function render() {
-      let equipos = LINEAS[app.linea] || [];
+      const equipos = LINEAS[app.linea] || [];
       let html = '';
 
       html += `<div class="section selector-linea">
         <div class="field">
           <label class="label">Selecciona Rutina</label>
           <select onchange="app.linea=this.value; app.datos={}; app.abiertos={}; save(); render()">
-            ${Object.keys(LINEAS).map(l => '<option '+(app.linea===l?'selected':'')+'>'+l+'</option>').join('')}
+            ${Object.keys(LINEAS).map(l => `<option ${app.linea === l ? 'selected' : ''}>${l}</option>`).join('')}
           </select>
         </div>
       </div>`;
@@ -348,14 +306,14 @@
           <label class="label">Técnico *</label>
           <select onchange="app.tecnico=this.value; save(); updateBtnGuardar()">
             <option value="">Selecciona...</option>
-            ${TECNICOS.map(t => '<option '+(app.tecnico===t?'selected':'')+'>'+t+'</option>').join('')}
+            ${TECNICOS.map(t => `<option ${app.tecnico === t ? 'selected' : ''}>${t}</option>`).join('')}
           </select>
         </div>
         <div class="field">
           <label class="label">Supervisor *</label>
           <select onchange="app.supervisor=this.value; save(); updateBtnGuardar()">
             <option value="">Selecciona...</option>
-            ${SUPERVISORES.map(s => '<option '+(app.supervisor===s?'selected':'')+'>'+s+'</option>').join('')}
+            ${SUPERVISORES.map(s => `<option ${app.supervisor === s ? 'selected' : ''}>${s}</option>`).join('')}
           </select>
         </div>
         <div class="field">
@@ -372,24 +330,21 @@
         </div>
       </div>`;
 
-
-
       equipos.forEach((eq, ei) => {
-        html += `<div class="equipo ${app.abiertos[ei]?'abierto':''}" data-equipo="${ei}">
+        html += `<div class="equipo ${app.abiertos[ei] ? 'abierto' : ''}" data-equipo="${ei}">
           <div class="equipo-head" onclick="app.abiertos[${ei}]=!app.abiertos[${ei}]; vibratePhone(); save(); toggleEquipoDOM(${ei})">
-            <div class="equipo-nombre">${ei+1}. ${eq.nombre}</div>
+            <div class="equipo-nombre">${ei + 1}. ${eq.nombre}</div>
             <div class="equipo-toggle">▼</div>
           </div>
           <div class="equipo-body">`;
-        
+
         eq.checks.forEach((cp, ci) => {
           if (!app.datos[ei]) app.datos[ei] = {};
-          if (!app.datos[ei][ci]) app.datos[ei][ci] = {m:false, c:''};
-          let d = app.datos[ei][ci];
-          
-          html += `<div class="checkpoint ${d.m?'marcado':''}" data-checkpoint="${ei}-${ci}">
+          if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
+          const d = app.datos[ei][ci];
+          html += `<div class="checkpoint ${d.m ? 'marcado' : ''}" data-checkpoint="${ei}-${ci}">
             <div class="check-header">
-              <input type="checkbox" ${d.m?'checked':''} onchange="toggleCheck(${ei},${ci})">
+              <input type="checkbox" ${d.m ? 'checked' : ''} onchange="toggleCheck(${ei},${ci})">
               <div class="check-texto">${cp}</div>
             </div>
             <div class="check-comment">
@@ -397,12 +352,12 @@
             </div>
           </div>`;
         });
-        
+
         html += `</div></div>`;
       });
 
       html += `<div class="botones">
-        <button class="btn-guardar" id="btnGuardar" onclick="guardar()">💾 Guardar</button>
+        <button class="btn-guardar" id="btnGuardar" onclick="guardar()" ${!app.tecnico || !app.supervisor ? 'disabled' : ''}>💾 Guardar</button>
         <button class="btn-otro" onclick="app.datos={}; app.abiertos={}; save(); render()">🗑️ Limpiar</button>
         <button class="btn-otro" onclick="exportar()">📥 Exportar</button>
       </div>`;
@@ -411,113 +366,98 @@
     }
 
     function buildPayload() {
-  const equipos = LINEAS[app.linea] || [];
-  return {
-    fecha: new Date().toISOString(),
-    linea: app.linea,
-    tecnico: app.tecnico,
-    supervisor: app.supervisor,
-    producto: app.producto,
-    equipos: equipos.map((eq, ei) => ({
-      nombre: eq.nombre,
-      checks: eq.checks.map((cp, ci) => {
-        const d = (app.datos[ei] && app.datos[ei][ci]) || { m: false, c: '' };
-        return {
-          texto: cp,
-          marcado: d.m,
-          comentario: d.c
-        };
-      })
-    }))
-  };
-}
+      const equipos = LINEAS[app.linea] || [];
+      return {
+        fecha: new Date().toISOString(),
+        linea: app.linea,
+        tecnico: app.tecnico,
+        supervisor: app.supervisor,
+        producto: app.producto,
+        equipos: equipos.map((eq, ei) => ({
+          nombre: eq.nombre,
+          checks: eq.checks.map((cp, ci) => {
+            const d = (app.datos[ei] && app.datos[ei][ci]) || {m: false, c: ''};
+            return { texto: cp, marcado: d.m, comentario: d.c };
+          })
+        }))
+      };
+    }
 
     async function guardar() {
-  if (!app.tecnico || !app.supervisor) {
-    alert('Selecciona técnico y supervisor');
-    return;
-  }
+      if (!app.tecnico || !app.supervisor) {
+        alert('Selecciona técnico y supervisor');
+        return;
+      }
 
-  vibratePhone();
+      vibratePhone();
 
-  const payload = buildPayload();
+      const payload = buildPayload();
 
-  let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
-  let total = 0, marcados = 0;
-  payload.equipos.forEach(eq => {
-    eq.checks.forEach(ch => {
-      total++;
-      if (ch.marcado) marcados++;
-    });
-  });
-  rutinas.unshift({
-    ...payload,
-    porcentaje: total ? Math.round(marcados * 100 / total) : 0
-  });
-  localStorage.setItem('rutinas', JSON.stringify(rutinas));
+      // Backup local
+      let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
+      let total = 0, marcados = 0;
+      payload.equipos.forEach(eq => {
+        eq.checks.forEach(ch => {
+          total++;
+          if (ch.marcado) marcados++;
+        });
+      });
+      rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
+      localStorage.setItem('rutinas', JSON.stringify(rutinas));
 
-  const btnGuardar = document.getElementById('btnGuardar');
-  btnGuardar.disabled = true;
-  btnGuardar.textContent = '⏳ Guardando...';
+      const btnGuardar = document.getElementById('btnGuardar');
+      btnGuardar.disabled = true;
+      btnGuardar.textContent = '⏳ Guardando...';
 
-  try {
-    const formData = new FormData();
-    formData.append('payload', JSON.stringify(payload));
+      try {
+        const formData = new FormData();
+        formData.append('payload', JSON.stringify(payload));
 
-    await fetch(apiUrl, {
-      method: 'POST',
-      mode: 'no-cors',
-      body: formData
-    });
+        await fetch(apiUrl, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: formData
+        });
 
-    app.tecnico = ''; app.supervisor = ''; app.producto = '';
-    app.datos = {}; app.abiertos = {};
-    save();
-    render();
-    alert('✓ Rutina guardada en la nube');
+        app.tecnico = ''; app.supervisor = ''; app.producto = '';
+        app.datos = {}; app.abiertos = {};
+        save();
+        render();
+        alert('✓ Rutina guardada en la nube');
 
-  } catch (err) {
-    alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
-    app.tecnico = ''; app.supervisor = ''; app.producto = '';
-    app.datos = {}; app.abiertos = {};
-    save();
-    render();
-  } finally {
-    const btn = document.getElementById('btnGuardar');
-    if (btn) { btn.disabled = false; btn.textContent = '💾 Guardar'; }
-  }
-}
+      } catch (err) {
+        alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
+        app.tecnico = ''; app.supervisor = ''; app.producto = '';
+        app.datos = {}; app.abiertos = {};
+        save();
+        render();
+      }
+    }
 
-function exportar() {
-  render();
-} finally {
-  btnGuardar.disabled = false;
-  btnGuardar.textContent = '💾 Guardar';
-}
     function exportar() {
-      let rutinas = JSON.parse(localStorage.getItem('rutinas')||'[]');
+      const rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
       if (!rutinas.length) { alert('Sin rutinas'); return; }
-      let csv = 'RUTINAS PMP - '+new Date().toLocaleDateString('es-AR')+'\n\n';
+      let csv = 'RUTINAS PMP - ' + new Date().toLocaleDateString('es-AR') + '\n\n';
       rutinas.forEach(r => {
-        let equipos = LINEAS[r.linea] || [];
-        csv += r.linea+' | '+new Date(r.fecha).toLocaleDateString('es-AR')+' | '+r.tecnico+' | '+r.supervisor+' | '+r.producto+' | '+r.porcentaje+'%\n';
+        const equipos = LINEAS[r.linea] || [];
+        csv += r.linea + ' | ' + new Date(r.fecha).toLocaleDateString('es-AR') + ' | ' + r.tecnico + ' | ' + r.supervisor + ' | ' + r.producto + ' | ' + r.porcentaje + '%\n';
         equipos.forEach((eq, ei) => {
           let hay = false;
           eq.checks.forEach((cp, ci) => {
             if (r.datos[ei] && r.datos[ei][ci] && r.datos[ei][ci].m) {
-              if (!hay) { csv += '\n'+eq.nombre+':\n'; hay = true; }
-              csv += '  • '+cp;
-              if (r.datos[ei][ci].c) csv += ' - '+r.datos[ei][ci].c;
+              if (!hay) { csv += '\n' + eq.nombre + ':\n'; hay = true; }
+              csv += '  • ' + cp;
+              if (r.datos[ei][ci].c) csv += ' - ' + r.datos[ei][ci].c;
               csv += '\n';
             }
           });
         });
-        csv += '\n'+'='.repeat(80)+'\n\n';
+        csv += '\n' + '='.repeat(80) + '\n\n';
       });
-      let blob = new Blob([csv], {type:'text/csv'});
-      let a = document.createElement('a');
+      const blob = new Blob([csv], {type: 'text/csv'});
+      const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'rutinas-pmp-'+new Date().toISOString().split('T')[0]+'.csv';
+      a.download = 'rutinas-pmp-' + new Date().toISOString().split('T')[0] + '.csv';
       a.click();
     }
 
