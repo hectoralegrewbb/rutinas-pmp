@@ -463,12 +463,14 @@
   btnGuardar.textContent = '⏳ Guardando...';
  
   try {
-    const res = await fetch(apiUrl, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    });
-    const data = await res.json();
+    const formData = new FormData();
+formData.append('payload', JSON.stringify(payload));
+
+const res = await fetch(apiUrl, {
+  method: 'POST',
+  body: formData
+});
+const data = await res.json();
  
     if (data.ok) {
       app.tecnico = ''; app.supervisor = ''; app.producto = '';
