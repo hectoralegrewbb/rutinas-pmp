@@ -417,12 +417,29 @@ async function guardar() {
       .filter(eq => eq.checks.length > 0)
   };
 
-  const encodedPayload = encodeURIComponent(JSON.stringify(payloadReducido));
-  const ifrm = document.createElement('iframe');
-  ifrm.style.display = 'none';
-  ifrm.src = apiUrl + '?payload=' + encodedPayload;
-  document.body.appendChild(ifrm);
-  setTimeout(() => { document.body.removeChild(ifrm); }, 5000);
+  const form = document.createElement('form');
+form.method = 'POST';
+form.action = apiUrl;
+form.target = 'ifrm_rutina';
+form.style.display = 'none';
+
+const input = document.createElement('input');
+input.type = 'hidden';
+input.name = 'payload';
+input.value = JSON.stringify(payloadReducido);
+form.appendChild(input);
+
+const ifrm = document.createElement('iframe');
+ifrm.name = 'ifrm_rutina';
+ifrm.style.display = 'none';
+document.body.appendChild(ifrm);
+document.body.appendChild(form);
+form.submit();
+
+setTimeout(() => {
+  document.body.removeChild(form);
+  document.body.removeChild(ifrm);
+}, 5000);
 
   app.tecnico = ''; app.supervisor = ''; app.producto = '';
   app.datos = {}; app.abiertos = {};
