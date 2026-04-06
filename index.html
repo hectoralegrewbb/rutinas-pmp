@@ -437,12 +437,11 @@
     alert('Selecciona técnico y supervisor');
     return;
   }
- 
+
   vibratePhone();
- 
+
   const payload = buildPayload();
- 
-  // Guardar en localStorage (backup local, igual que antes)
+
   let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
   let total = 0, marcados = 0;
   payload.equipos.forEach(eq => {
@@ -456,34 +455,40 @@
     porcentaje: total ? Math.round(marcados * 100 / total) : 0
   });
   localStorage.setItem('rutinas', JSON.stringify(rutinas));
- 
-  // Enviar a Google Sheets
-  const btnGuardar = document.querySelector('.btn-guardar');
+
+  const btnGuardar = document.getElementById('btnGuardar');
   btnGuardar.disabled = true;
   btnGuardar.textContent = '⏳ Guardando...';
- 
+
   try {
-  const formData = new FormData();
-  formData.append('payload', JSON.stringify(payload));
+    const formData = new FormData();
+    formData.append('payload', JSON.stringify(payload));
 
-  await fetch(apiUrl, {
-    method: 'POST',
-    mode: 'no-cors',
-    body: formData
-  });
+    await fetch(apiUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      body: formData
+    });
 
-  // Con no-cors no podemos leer la respuesta, pero los datos llegaron
-  app.tecnico = ''; app.supervisor = ''; app.producto = '';
-  app.datos = {}; app.abiertos = {};
-  save();
-  render();
-  alert('✓ Rutina guardada en la nube');
+    app.tecnico = ''; app.supervisor = ''; app.producto = '';
+    app.datos = {}; app.abiertos = {};
+    save();
+    render();
+    alert('✓ Rutina guardada en la nube');
 
-} catch (err) {
-  alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
-  app.tecnico = ''; app.supervisor = ''; app.producto = '';
-  app.datos = {}; app.abiertos = {};
-  save();
+  } catch (err) {
+    alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
+    app.tecnico = ''; app.supervisor = ''; app.producto = '';
+    app.datos = {}; app.abiertos = {};
+    save();
+    render();
+  } finally {
+    const btn = document.getElementById('btnGuardar');
+    if (btn) { btn.disabled = false; btn.textContent = '💾 Guardar'; }
+  }
+}
+
+function exportar() {
   render();
 } finally {
   btnGuardar.disabled = false;
