@@ -405,21 +405,6 @@ async function guardar() {
   rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
   localStorage.setItem('rutinas', JSON.stringify(rutinas));
 
-  // Payload reducido — solo checks marcados
-  const payloadReducido = {
-    fecha: payload.fecha,
-    linea: payload.linea,
-    tecnico: payload.tecnico,
-    supervisor: payload.supervisor,
-    producto: payload.producto,
-    equipos: payload.equipos
-      .map(eq => ({
-        nombre: eq.nombre,
-        checks: eq.checks.filter(ch => ch.marcado)
-      }))
-      .filter(eq => eq.checks.length > 0)
-  };
-
   const encodedPayload = encodeURIComponent(JSON.stringify(payloadReducido));
   const ifrm = document.createElement('iframe');
   ifrm.style.display = 'none';
