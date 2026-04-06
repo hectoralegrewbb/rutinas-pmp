@@ -383,11 +383,22 @@
       };
     }
 
-    async function guardar() {
-      if (!app.tecnico || !app.supervisor) {
-        alert('Selecciona técnico y supervisor');
-        return;
-      }
+    // Enviar via GET con iframe oculto (evita CORS)
+const encodedPayload = encodeURIComponent(JSON.stringify(payload));
+const ifrm = document.createElement('iframe');
+ifrm.style.display = 'none';
+ifrm.src = apiUrl + '?payload=' + encodedPayload;
+document.body.appendChild(ifrm);
+
+setTimeout(() => {
+  document.body.removeChild(ifrm);
+}, 5000);
+
+app.tecnico = ''; app.supervisor = ''; app.producto = '';
+app.datos = {}; app.abiertos = {};
+save();
+render();
+alert('✓ Rutina guardada en la nube');
 
       vibratePhone();
 
