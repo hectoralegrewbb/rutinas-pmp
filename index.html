@@ -240,6 +240,8 @@
   <footer>Pilares © 2026</footer>
 
   <script>
+    const apiUrl = 'https://script.google.com/macros/s/AKfycbwPQp2kpqY66apGs0BEUoVftvi1gAvCRA7Qc9IaSGpDnOGiZj5WQAh2eU_DN3...'
+    
     const LINEAS = {
       "Línea 1": [{nombre:"Amasadora",checks:["El equipo no funciona correctamente","Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero"]},{nombre:"Cortadora",checks:["El equipo no funciona correctamente","No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea y bujes presentan huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente"]},{nombre:"Dulcera",checks:["El equipo está funcionando correctamente","El equipo presenta pérdidas","Las mangueras se encuentran en buen estado","El pistón está funcionando correctamente","El buje que acopla el pistón con la válvula de inyectado está en buen estado"]},{nombre:"Cubo de dulce",checks:["El mezclador no está funcionando","El motor del mezclador presenta algún ruido extraño y/o huelgo","El reductor del mezclador no posee aceite y/o presenta pérdidas","La cadena precisa lubricación y/o posee desgaste","El reductor se encuentra con pérdidas de aceite","La bomba de transporte tiene pérdidas","La cañería de transporte presenta alguna pérdida"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","Micarta en mal estado"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Piñones en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro","Pérdidas de aceite en reductores"]},{nombre:"Detector de metales",checks:["El equipo no funciona correctamente","El indicador luminoso no está funcionando","Ruidos anormales","No está activado en el HMI el detector de metales y/o detectores de metales: parar marcha"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales"]}],
       "Línea 2": [{nombre:"Amasadora",checks:["Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero"]},{nombre:"Rotativa",checks:["Las protecciones no están colocadas","Lona en mal estado","Bujes están en mal estado","El equipo precisa lubricación","Las botoneras/pulsadores/selectoras funcionan correctamente","Poleas en mal estado, con huelgo o desperfectos","Cadenas/Correas en mal estado o con falta de lubricación"]},{nombre:"Cortadora",checks:["No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea presenta huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente"]},{nombre:"Azucarador",checks:["La sujeción del motovibrador está en mal estado","Tacos de goma en mal estado","Chapas de vibración en mal estado","Bandeja recuperadora de azúcar en mal estado"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","El extractor de aire requiere revisión","Micarta en mal estado"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Eje en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro"]},{nombre:"Detector de metales",checks:["No funciona correctamente el paro de emergencia","No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales"]}],
@@ -402,35 +404,87 @@
       document.getElementById('main').innerHTML = html;
     }
 
-    function guardar() {
-      if (!app.tecnico || !app.supervisor) {
-        alert('Selecciona técnico y supervisor');
-        return;
-      }
-      vibratePhone();
-      let rutinas = JSON.parse(localStorage.getItem('rutinas')||'[]');
-      let total = 0, marcados = 0;
-      for (let i in app.datos) {
-        for (let j in app.datos[i]) {
-          total++;
-          if (app.datos[i][j].m) marcados++;
-        }
-      }
-      rutinas.unshift({
-        fecha: new Date().toISOString(),
-        linea: app.linea,
-        tecnico: app.tecnico,
-        supervisor: app.supervisor,
-        producto: app.producto,
-        datos: app.datos,
-        porcentaje: total ? Math.round(marcados*100/total) : 0
-      });
-      localStorage.setItem('rutinas', JSON.stringify(rutinas));
-      app.tecnico=''; app.supervisor=''; app.producto=''; app.datos={}; app.abiertos={};
+    function buildPayload() {
+  const equipos = LINEAS[app.linea] || [];
+  return {
+    fecha: new Date().toISOString(),
+    linea: app.linea,
+    tecnico: app.tecnico,
+    supervisor: app.supervisor,
+    producto: app.producto,
+    equipos: equipos.map((eq, ei) => ({
+      nombre: eq.nombre,
+      checks: eq.checks.map((cp, ci) => {
+        const d = (app.datos[ei] && app.datos[ei][ci]) || { m: false, c: '' };
+        return {
+          texto: cp,
+          marcado: d.m,
+          comentario: d.c
+        };
+      })
+    }))
+  };
+}
+
+    async function guardar() {
+  if (!app.tecnico || !app.supervisor) {
+    alert('Selecciona técnico y supervisor');
+    return;
+  }
+ 
+  vibratePhone();
+ 
+  const payload = buildPayload();
+ 
+  // Guardar en localStorage (backup local, igual que antes)
+  let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
+  let total = 0, marcados = 0;
+  payload.equipos.forEach(eq => {
+    eq.checks.forEach(ch => {
+      total++;
+      if (ch.marcado) marcados++;
+    });
+  });
+  rutinas.unshift({
+    ...payload,
+    porcentaje: total ? Math.round(marcados * 100 / total) : 0
+  });
+  localStorage.setItem('rutinas', JSON.stringify(rutinas));
+ 
+  // Enviar a Google Sheets
+  const btnGuardar = document.querySelector('.btn-guardar');
+  btnGuardar.disabled = true;
+  btnGuardar.textContent = '⏳ Guardando...';
+ 
+  try {
+    const res = await fetch(apiUrl, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const data = await res.json();
+ 
+    if (data.ok) {
+      app.tecnico = ''; app.supervisor = ''; app.producto = '';
+      app.datos = {}; app.abiertos = {};
       save();
       render();
-      alert('✓ Rutina guardada');
+      alert('✓ Rutina guardada en la nube');
+    } else {
+      throw new Error(data.error || 'Error desconocido');
     }
+  } catch (err) {
+    // Si falla la nube, queda guardado en localStorage de todas formas
+    alert('⚠️ Sin conexión — rutina guardada localmente.\nSe sincronizará al exportar.\n\nError: ' + err.message);
+    app.tecnico = ''; app.supervisor = ''; app.producto = '';
+    app.datos = {}; app.abiertos = {};
+    save();
+    render();
+  } finally {
+    btnGuardar.disabled = false;
+    btnGuardar.textContent = '💾 Guardar';
+  }
+}
 
     function exportar() {
       let rutinas = JSON.parse(localStorage.getItem('rutinas')||'[]');
