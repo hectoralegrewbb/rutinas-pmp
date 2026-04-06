@@ -383,6 +383,139 @@ function buildPayload() {
   };
 }
 
+function generarReporte(payload) {
+  const fecha = new Date(payload.fecha);
+  const fechaStr = fecha.toLocaleDateString('es-AR');
+  const horaStr = fecha.toLocaleTimeString('es-AR');
+
+  const totalChecks = payload.equipos.reduce((s, eq) => s + eq.checks.length, 0);
+  const novedades   = payload.equipos.reduce((s, eq) => s + eq.checks.filter(c => c.marcado).length, 0);
+  const ok          = totalChecks - novedades;
+
+  let equiposHtml = '';
+  payload.equipos.forEach(eq => {
+    const tieneNovedades = eq.checks.some(c => c.marcado);
+    const estadoEquipo   = tieneNovedades ? '⚠ Con novedades' : '✓ Sin novedades';
+    const colorEquipo    = tieneNovedades ? '#FEF3C7' : '#D1FAE5';
+    const colorBorde     = tieneNovedades ? '#F59E0B' : '#059669';
+
+    let checksHtml = '';
+    eq.checks.forEach(ch => {
+      const esNovedad = ch.marcado;
+      const bg    = esNovedad ? '#FEF3C7' : '#F0FDF4';
+      const borde = esNovedad ? '#F59E0B' : '#A7F3D0';
+      const icono = esNovedad ? '⚠' : '✓';
+      const color = esNovedad ? '#92400E' : '#065F46';
+      const peso  = esNovedad ? 'bold' : 'normal';
+
+      checksHtml += `
+        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 12px;
+                    background:${bg};border-left:3px solid ${borde};
+                    border-radius:6px;margin-bottom:6px;">
+          <span style="color:${color};font-weight:bold;min-width:18px;font-size:14px;">${icono}</span>
+          <div style="flex:1;">
+            <span style="font-size:13px;color:${color};font-weight:${peso};">${ch.texto}</span>
+            ${ch.marcado && ch.comentario
+              ? `<div style="font-size:12px;color:#92400E;margin-top:4px;font-style:italic;">— ${ch.comentario}</div>`
+              : ''}
+          </div>
+          <span style="font-size:11px;font-weight:bold;color:${color};white-space:nowrap;">
+            ${esNovedad ? 'NOVEDAD' : 'OK'}
+          </span>
+        </div>`;
+    });
+
+    equiposHtml += `
+      <div style="margin-bottom:16px;border:1px solid ${colorBorde};border-radius:10px;overflow:hidden;">
+        <div style="background:${colorEquipo};padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
+          <span style="font-weight:bold;font-size:14px;color:#064E3B;">${eq.nombre}</span>
+          <span style="font-size:12px;font-weight:bold;color:${tieneNovedades ? '#92400E' : '#065F46'};">${estadoEquipo}</span>
+        </div>
+        <div style="padding:10px 12px;">${checksHtml}</div>
+      </div>`;
+  });
+
+  const html = `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Reporte Rutina PMP — ${payload.linea}</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+           background:#F0FDF4; color:#064E3B; }
+    .header { background:linear-gradient(135deg,#036A3B,#10b981);
+              padding:20px 24px; color:white; }
+    .header h1 { font-size:20px; font-weight:700; margin-bottom:4px; }
+    .header p  { font-size:13px; opacity:.9; }
+    .meta { background:white; border-bottom:1px solid #A7F3D0;
+            padding:14px 24px; display:grid;
+            grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
+    .meta-item label { font-size:10px; font-weight:700; color:#6B7280;
+                       text-transform:uppercase; letter-spacing:.5px; display:block; }
+    .meta-item span  { font-size:14px; font-weight:600; color:#064E3B; }
+    .kpis { display:grid; grid-template-columns:repeat(3,1fr);
+            gap:12px; padding:16px 24px; }
+    .kpi  { background:white; border-radius:10px; padding:14px;
+            text-align:center; border:1px solid #A7F3D0; }
+    .kpi .num  { font-size:28px; font-weight:700; }
+    .kpi .lbl  { font-size:11px; color:#6B7280; text-transform:uppercase;
+                 letter-spacing:.5px; margin-top:2px; }
+    .kpi.ok    { border-color:#059669; }
+    .kpi.ok .num { color:#059669; }
+    .kpi.nov   { border-color:#F59E0B; }
+    .kpi.nov .num { color:#D97706; }
+    .body { padding:0 24px 24px; }
+    .btn-pdf { display:block; width:100%; padding:14px;
+               background:#036A3B; color:white; border:none;
+               border-radius:10px; font-size:15px; font-weight:700;
+               cursor:pointer; margin:0 0 20px; letter-spacing:.5px; }
+    .firma { background:white; border:1px solid #A7F3D0; border-radius:10px;
+             padding:14px 16px; margin-bottom:16px; font-size:12px; color:#6B7280;
+             text-align:center; line-height:1.8; }
+    @media print {
+      .btn-pdf { display:none; }
+      body { background:white; }
+      .header { background:#036A3B !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>Rutina de Inspección PMP</h1>
+    <p>Pilares Compañía Alimenticia — Registro oficial de inspección</p>
+  </div>
+  <div class="meta">
+    <div class="meta-item"><label>Línea / Área</label><span>${payload.linea}</span></div>
+    <div class="meta-item"><label>Técnico</label><span>${payload.tecnico}</span></div>
+    <div class="meta-item"><label>Supervisor</label><span>${payload.supervisor}</span></div>
+    <div class="meta-item"><label>Producto</label><span>${payload.producto || '—'}</span></div>
+    <div class="meta-item"><label>Fecha</label><span>${fechaStr}</span></div>
+    <div class="meta-item"><label>Hora</label><span>${horaStr}</span></div>
+  </div>
+  <div class="kpis">
+    <div class="kpi"><div class="num">${totalChecks}</div><div class="lbl">Puntos inspeccionados</div></div>
+    <div class="kpi ok"><div class="num">${ok}</div><div class="lbl">Sin novedad</div></div>
+    <div class="kpi nov"><div class="num">${novedades}</div><div class="lbl">Con novedad</div></div>
+  </div>
+  <div class="body">
+    <button class="btn-pdf" onclick="window.print()">Guardar como PDF / Imprimir</button>
+    ${equiposHtml}
+    <div class="firma">
+      Este reporte fue generado automáticamente por el Sistema de Rutinas PMP de Pilares.<br>
+      Fecha y hora de generación: ${fechaStr} ${horaStr}<br>
+      Técnico responsable: <strong>${payload.tecnico}</strong> — Supervisor: <strong>${payload.supervisor}</strong>
+    </div>
+  </div>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url  = URL.createObjectURL(blob);
+  window.open(url, '_blank');
+}
+
 async function guardar() {
   if (!app.tecnico || !app.supervisor) {
     alert('Selecciona técnico y supervisor');
@@ -405,47 +538,59 @@ async function guardar() {
   rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
   localStorage.setItem('rutinas', JSON.stringify(rutinas));
 
-  // Payload reducido — solo checks marcados
-  const payloadReducido = {
+  // Payload al Sheet: novedades + cobertura de equipos sin novedad
+  const payloadSheet = {
     fecha: payload.fecha,
     linea: payload.linea,
     tecnico: payload.tecnico,
     supervisor: payload.supervisor,
     producto: payload.producto,
-    equipos: payload.equipos
-      .map(eq => ({ nombre: eq.nombre, checks: eq.checks.filter(ch => ch.marcado) }))
-      .filter(eq => eq.checks.length > 0)
+    equipos: payload.equipos.map(eq => {
+      const conNovedad = eq.checks.filter(ch => ch.marcado);
+      if (conNovedad.length > 0) {
+        // Enviar solo los checks con novedad
+        return { nombre: eq.nombre, checks: conNovedad };
+      } else {
+        // Equipo sin novedades: una fila de cobertura
+        return {
+          nombre: eq.nombre,
+          checks: [{ texto: 'Inspección completada — sin novedades', marcado: true, comentario: '' }]
+        };
+      }
+    })
   };
 
   const form = document.createElement('form');
-form.method = 'POST';
-form.action = apiUrl;
-form.target = 'ifrm_rutina';
-form.style.display = 'none';
+  form.method = 'POST';
+  form.action = apiUrl;
+  form.target = 'ifrm_rutina';
+  form.style.display = 'none';
 
-const input = document.createElement('input');
-input.type = 'hidden';
-input.name = 'payload';
-input.value = JSON.stringify(payloadReducido);
-form.appendChild(input);
+  const input = document.createElement('input');
+  input.type = 'hidden';
+  input.name = 'payload';
+  input.value = JSON.stringify(payloadSheet);
+  form.appendChild(input);
 
-const ifrm = document.createElement('iframe');
-ifrm.name = 'ifrm_rutina';
-ifrm.style.display = 'none';
-document.body.appendChild(ifrm);
-document.body.appendChild(form);
-form.submit();
+  const ifrm = document.createElement('iframe');
+  ifrm.name = 'ifrm_rutina';
+  ifrm.style.display = 'none';
+  document.body.appendChild(ifrm);
+  document.body.appendChild(form);
+  form.submit();
 
-setTimeout(() => {
-  document.body.removeChild(form);
-  document.body.removeChild(ifrm);
-}, 5000);
+  setTimeout(() => {
+    if (document.body.contains(form)) document.body.removeChild(form);
+    if (document.body.contains(ifrm)) document.body.removeChild(ifrm);
+  }, 5000);
+
+  // Generar reporte antes de limpiar el estado
+  generarReporte(payload);
 
   app.tecnico = ''; app.supervisor = ''; app.producto = '';
   app.datos = {}; app.abiertos = {};
   save();
   render();
-  alert('✓ Rutina guardada en la nube');
 }
 
 function exportar() {
