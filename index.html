@@ -365,24 +365,6 @@ function render() {
   document.getElementById('main').innerHTML = html;
 }
 
-function buildPayload() {
-  const equipos = LINEAS[app.linea] || [];
-  return {
-    fecha: new Date().toISOString(),
-    linea: app.linea,
-    tecnico: app.tecnico,
-    supervisor: app.supervisor,
-    producto: app.producto,
-    equipos: equipos.map((eq, ei) => ({
-      nombre: eq.nombre,
-      checks: eq.checks.map((cp, ci) => {
-        const d = (app.datos[ei] && app.datos[ei][ci]) || {m: false, c: ''};
-        return { texto: cp, marcado: d.m, comentario: d.c };
-      })
-    }))
-  };
-}
-
 async function guardar() {
   if (!app.tecnico || !app.supervisor) {
     alert('Selecciona técnico y supervisor');
