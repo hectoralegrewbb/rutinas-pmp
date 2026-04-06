@@ -397,62 +397,56 @@ const payloadReducido = {
     }))
     .filter(eq => eq.checks.length > 0)
 };
+async function guardar() {
+  if (!app.tecnico || !app.supervisor) {
+    alert('Selecciona técnico y supervisor');
+    return;
+  }
 
-const encodedPayload = encodeURIComponent(JSON.stringify(payloadReducido));
-const ifrm = document.createElement('iframe');
-ifrm.style.display = 'none';
-ifrm.src = apiUrl + '?payload=' + encodedPayload;
-document.body.appendChild(ifrm);
-setTimeout(() => { document.body.removeChild(ifrm); }, 5000);
+  vibratePhone();
 
-app.tecnico = ''; app.supervisor = ''; app.producto = '';
-app.datos = {}; app.abiertos = {};
-save();
-render();
-alert('✓ Rutina guardada en la nube');
+  const payload = buildPayload();
 
-    
-      // Backup local
-      let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
-      let total = 0, marcados = 0;
-      payload.equipos.forEach(eq => {
-        eq.checks.forEach(ch => {
-          total++;
-          if (ch.marcado) marcados++;
-        });
-      });
-      rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
-      localStorage.setItem('rutinas', JSON.stringify(rutinas));
+  // Backup local
+  let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
+  let total = 0, marcados = 0;
+  payload.equipos.forEach(eq => {
+    eq.checks.forEach(ch => {
+      total++;
+      if (ch.marcado) marcados++;
+    });
+  });
+  rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
+  localStorage.setItem('rutinas', JSON.stringify(rutinas));
 
-      const btnGuardar = document.getElementById('btnGuardar');
-      btnGuardar.disabled = true;
-      btnGuardar.textContent = '⏳ Guardando...';
+  // Payload reducido — solo checks marcados
+  const payloadReducido = {
+    fecha: payload.fecha,
+    linea: payload.linea,
+    tecnico: payload.tecnico,
+    supervisor: payload.supervisor,
+    producto: payload.producto,
+    equipos: payload.equipos
+      .map(eq => ({
+        nombre: eq.nombre,
+        checks: eq.checks.filter(ch => ch.marcado)
+      }))
+      .filter(eq => eq.checks.length > 0)
+  };
 
-      try {
-        const formData = new FormData();
-        formData.append('payload', JSON.stringify(payload));
+  const encodedPayload = encodeURIComponent(JSON.stringify(payloadReducido));
+  const ifrm = document.createElement('iframe');
+  ifrm.style.display = 'none';
+  ifrm.src = apiUrl + '?payload=' + encodedPayload;
+  document.body.appendChild(ifrm);
+  setTimeout(() => { document.body.removeChild(ifrm); }, 5000);
 
-        await fetch(apiUrl, {
-          method: 'POST',
-          mode: 'no-cors',
-          body: formData
-        });
-
-        app.tecnico = ''; app.supervisor = ''; app.producto = '';
-        app.datos = {}; app.abiertos = {};
-        save();
-        render();
-        alert('✓ Rutina guardada en la nube');
-
-      } catch (err) {
-        alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
-        app.tecnico = ''; app.supervisor = ''; app.producto = '';
-        app.datos = {}; app.abiertos = {};
-        save();
-        render();
-      }
-    }
-
+  app.tecnico = ''; app.supervisor = ''; app.producto = '';
+  app.datos = {}; app.abiertos = {};
+  save();
+  render();
+  alert('✓ Rutina guardada en la nube');
+}
     function exportar() {
       const rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
       if (!rutinas.length) { alert('Sin rutinas'); return; }
