@@ -364,6 +364,7 @@ function render() {
 
   document.getElementById('main').innerHTML = html;
 }
+
 function buildPayload() {
   const equipos = LINEAS[app.linea] || [];
   return {
@@ -381,7 +382,6 @@ function buildPayload() {
     }))
   };
 }
-    
 
 async function guardar() {
   if (!app.tecnico || !app.supervisor) {
