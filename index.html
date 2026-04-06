@@ -230,173 +230,159 @@
     const SUPERVISORES = ['Hugo Escobar','Franco Paez','Dario Gamba'];
 
     let app = {
-      linea: localStorage.getItem('linea') || 'Línea 1',
-      tecnico: localStorage.getItem('tecnico') || '',
-      supervisor: localStorage.getItem('supervisor') || '',
-      producto: localStorage.getItem('producto') || '',
-      datos: JSON.parse(localStorage.getItem('datos') || '{}'),
-      abiertos: JSON.parse(localStorage.getItem('abiertos') || '{}')
-    };
-
-    function save() {
-      localStorage.setItem('linea', app.linea);
-      localStorage.setItem('tecnico', app.tecnico);
-      localStorage.setItem('supervisor', app.supervisor);
-      localStorage.setItem('producto', app.producto);
-      localStorage.setItem('datos', JSON.stringify(app.datos));
-      localStorage.setItem('abiertos', JSON.stringify(app.abiertos));
-    }
-
-    function updateBtnGuardar() {
-      const btn = document.getElementById('btnGuardar');
-      if (!btn) return;
-      btn.disabled = !app.tecnico || !app.supervisor;
-    }
-
-    function vibratePhone() {
-      if (navigator.vibrate) navigator.vibrate(10);
-    }
-
-    function toggleCheck(ei, ci) {
-      if (!app.datos[ei]) app.datos[ei] = {};
-      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
-      app.datos[ei][ci].m = !app.datos[ei][ci].m;
-      vibratePhone();
-      save();
-      updateCheckpointDOM(ei, ci);
-    }
-
-    function updateComment(ei, ci, value) {
-      if (!app.datos[ei]) app.datos[ei] = {};
-      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
-      app.datos[ei][ci].c = value;
-      save();
-    }
-
-    function updateCheckpointDOM(ei, ci) {
-      const checkEl = document.querySelector(`[data-checkpoint="${ei}-${ci}"]`);
-      if (!checkEl) return;
-      const d = app.datos[ei] && app.datos[ei][ci];
-      if (d && d.m) checkEl.classList.add('marcado');
-      else checkEl.classList.remove('marcado');
-    }
-
-    function toggleEquipoDOM(ei) {
-      const equipoEl = document.querySelector(`[data-equipo="${ei}"]`);
-      if (!equipoEl) return;
-      if (app.abiertos[ei]) equipoEl.classList.add('abierto');
-      else equipoEl.classList.remove('abierto');
-    }
-
-    function render() {
-      const equipos = LINEAS[app.linea] || [];
-      let html = '';
-
-      html += `<div class="section selector-linea">
-        <div class="field">
-          <label class="label">Selecciona Rutina</label>
-          <select onchange="app.linea=this.value; app.datos={}; app.abiertos={}; save(); render()">
-            ${Object.keys(LINEAS).map(l => `<option ${app.linea === l ? 'selected' : ''}>${l}</option>`).join('')}
-          </select>
-        </div>
-      </div>`;
-
-      html += `<div class="section grid5">
-        <div class="field">
-          <label class="label">Técnico *</label>
-          <select onchange="app.tecnico=this.value; save(); updateBtnGuardar()">
-            <option value="">Selecciona...</option>
-            ${TECNICOS.map(t => `<option ${app.tecnico === t ? 'selected' : ''}>${t}</option>`).join('')}
-          </select>
-        </div>
-        <div class="field">
-          <label class="label">Supervisor *</label>
-          <select onchange="app.supervisor=this.value; save(); updateBtnGuardar()">
-            <option value="">Selecciona...</option>
-            ${SUPERVISORES.map(s => `<option ${app.supervisor === s ? 'selected' : ''}>${s}</option>`).join('')}
-          </select>
-        </div>
-        <div class="field">
-          <label class="label">Producto</label>
-          <input type="text" placeholder="¿Qué producto?" value="${app.producto}" onchange="app.producto=this.value; save()">
-        </div>
-        <div class="field">
-          <label class="label">Fecha</label>
-          <input type="text" value="${new Date().toLocaleDateString('es-AR')}" disabled>
-        </div>
-        <div class="field">
-          <label class="label">Hora</label>
-          <input type="text" value="${new Date().toLocaleTimeString('es-AR')}" disabled>
-        </div>
-      </div>`;
-
-      equipos.forEach((eq, ei) => {
-        html += `<div class="equipo ${app.abiertos[ei] ? 'abierto' : ''}" data-equipo="${ei}">
-          <div class="equipo-head" onclick="app.abiertos[${ei}]=!app.abiertos[${ei}]; vibratePhone(); save(); toggleEquipoDOM(${ei})">
-            <div class="equipo-nombre">${ei + 1}. ${eq.nombre}</div>
-            <div class="equipo-toggle">▼</div>
-          </div>
-          <div class="equipo-body">`;
-
-        eq.checks.forEach((cp, ci) => {
-          if (!app.datos[ei]) app.datos[ei] = {};
-          if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
-          const d = app.datos[ei][ci];
-          html += `<div class="checkpoint ${d.m ? 'marcado' : ''}" data-checkpoint="${ei}-${ci}">
-            <div class="check-header">
-              <input type="checkbox" ${d.m ? 'checked' : ''} onchange="toggleCheck(${ei},${ci})">
-              <div class="check-texto">${cp}</div>
-            </div>
-            <div class="check-comment">
-              <textarea onchange="updateComment(${ei},${ci},this.value)" placeholder="Agregá detalles (opcional)...">${d.c}</textarea>
-            </div>
-          </div>`;
-        });
-
-        html += `</div></div>`;
-      });
-
-      html += `<div class="botones">
-        <button class="btn-guardar" id="btnGuardar" onclick="guardar()" ${!app.tecnico || !app.supervisor ? 'disabled' : ''}>💾 Guardar</button>
-        <button class="btn-otro" onclick="app.datos={}; app.abiertos={}; save(); render()">🗑️ Limpiar</button>
-        <button class="btn-otro" onclick="exportar()">📥 Exportar</button>
-      </div>`;
-
-      document.getElementById('main').innerHTML = html;
-    }
-
-    function buildPayload() {
-      const equipos = LINEAS[app.linea] || [];
-      return {
-        fecha: new Date().toISOString(),
-        linea: app.linea,
-        tecnico: app.tecnico,
-        supervisor: app.supervisor,
-        producto: app.producto,
-        equipos: equipos.map((eq, ei) => ({
-          nombre: eq.nombre,
-          checks: eq.checks.map((cp, ci) => {
-            const d = (app.datos[ei] && app.datos[ei][ci]) || {m: false, c: ''};
-            return { texto: cp, marcado: d.m, comentario: d.c };
-          })
-        }))
-      };
-    }
-
-    // Construir payload reducido — solo checks marcados
-const payloadReducido = {
-  fecha: payload.fecha,
-  linea: payload.linea,
-  tecnico: payload.tecnico,
-  supervisor: payload.supervisor,
-  producto: payload.producto,
-  equipos: payload.equipos
-    .map(eq => ({
-      nombre: eq.nombre,
-      checks: eq.checks.filter(ch => ch.marcado)
-    }))
-    .filter(eq => eq.checks.length > 0)
+  linea: localStorage.getItem('linea') || 'Línea 1',
+  tecnico: localStorage.getItem('tecnico') || '',
+  supervisor: localStorage.getItem('supervisor') || '',
+  producto: localStorage.getItem('producto') || '',
+  datos: JSON.parse(localStorage.getItem('datos') || '{}'),
+  abiertos: JSON.parse(localStorage.getItem('abiertos') || '{}')
 };
+
+function save() {
+  localStorage.setItem('linea', app.linea);
+  localStorage.setItem('tecnico', app.tecnico);
+  localStorage.setItem('supervisor', app.supervisor);
+  localStorage.setItem('producto', app.producto);
+  localStorage.setItem('datos', JSON.stringify(app.datos));
+  localStorage.setItem('abiertos', JSON.stringify(app.abiertos));
+}
+
+function updateBtnGuardar() {
+  const btn = document.getElementById('btnGuardar');
+  if (!btn) return;
+  btn.disabled = !app.tecnico || !app.supervisor;
+}
+
+function vibratePhone() {
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+
+function toggleCheck(ei, ci) {
+  if (!app.datos[ei]) app.datos[ei] = {};
+  if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
+  app.datos[ei][ci].m = !app.datos[ei][ci].m;
+  vibratePhone();
+  save();
+  updateCheckpointDOM(ei, ci);
+}
+
+function updateComment(ei, ci, value) {
+  if (!app.datos[ei]) app.datos[ei] = {};
+  if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
+  app.datos[ei][ci].c = value;
+  save();
+}
+
+function updateCheckpointDOM(ei, ci) {
+  const checkEl = document.querySelector(`[data-checkpoint="${ei}-${ci}"]`);
+  if (!checkEl) return;
+  const d = app.datos[ei] && app.datos[ei][ci];
+  if (d && d.m) checkEl.classList.add('marcado');
+  else checkEl.classList.remove('marcado');
+}
+
+function toggleEquipoDOM(ei) {
+  const equipoEl = document.querySelector(`[data-equipo="${ei}"]`);
+  if (!equipoEl) return;
+  if (app.abiertos[ei]) equipoEl.classList.add('abierto');
+  else equipoEl.classList.remove('abierto');
+}
+
+function render() {
+  const equipos = LINEAS[app.linea] || [];
+  let html = '';
+
+  html += `<div class="section selector-linea">
+    <div class="field">
+      <label class="label">Selecciona Rutina</label>
+      <select onchange="app.linea=this.value; app.datos={}; app.abiertos={}; save(); render()">
+        ${Object.keys(LINEAS).map(l => `<option ${app.linea === l ? 'selected' : ''}>${l}</option>`).join('')}
+      </select>
+    </div>
+  </div>`;
+
+  html += `<div class="section grid5">
+    <div class="field">
+      <label class="label">Técnico *</label>
+      <select onchange="app.tecnico=this.value; save(); updateBtnGuardar()">
+        <option value="">Selecciona...</option>
+        ${TECNICOS.map(t => `<option ${app.tecnico === t ? 'selected' : ''}>${t}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field">
+      <label class="label">Supervisor *</label>
+      <select onchange="app.supervisor=this.value; save(); updateBtnGuardar()">
+        <option value="">Selecciona...</option>
+        ${SUPERVISORES.map(s => `<option ${app.supervisor === s ? 'selected' : ''}>${s}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field">
+      <label class="label">Producto</label>
+      <input type="text" placeholder="¿Qué producto?" value="${app.producto}" onchange="app.producto=this.value; save()">
+    </div>
+    <div class="field">
+      <label class="label">Fecha</label>
+      <input type="text" value="${new Date().toLocaleDateString('es-AR')}" disabled>
+    </div>
+    <div class="field">
+      <label class="label">Hora</label>
+      <input type="text" value="${new Date().toLocaleTimeString('es-AR')}" disabled>
+    </div>
+  </div>`;
+
+  equipos.forEach((eq, ei) => {
+    html += `<div class="equipo ${app.abiertos[ei] ? 'abierto' : ''}" data-equipo="${ei}">
+      <div class="equipo-head" onclick="app.abiertos[${ei}]=!app.abiertos[${ei}]; vibratePhone(); save(); toggleEquipoDOM(${ei})">
+        <div class="equipo-nombre">${ei + 1}. ${eq.nombre}</div>
+        <div class="equipo-toggle">▼</div>
+      </div>
+      <div class="equipo-body">`;
+
+    eq.checks.forEach((cp, ci) => {
+      if (!app.datos[ei]) app.datos[ei] = {};
+      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
+      const d = app.datos[ei][ci];
+      html += `<div class="checkpoint ${d.m ? 'marcado' : ''}" data-checkpoint="${ei}-${ci}">
+        <div class="check-header">
+          <input type="checkbox" ${d.m ? 'checked' : ''} onchange="toggleCheck(${ei},${ci})">
+          <div class="check-texto">${cp}</div>
+        </div>
+        <div class="check-comment">
+          <textarea onchange="updateComment(${ei},${ci},this.value)" placeholder="Agregá detalles (opcional)...">${d.c}</textarea>
+        </div>
+      </div>`;
+    });
+
+    html += `</div></div>`;
+  });
+
+  html += `<div class="botones">
+    <button class="btn-guardar" id="btnGuardar" onclick="guardar()" ${!app.tecnico || !app.supervisor ? 'disabled' : ''}>💾 Guardar</button>
+    <button class="btn-otro" onclick="app.datos={}; app.abiertos={}; save(); render()">🗑️ Limpiar</button>
+    <button class="btn-otro" onclick="exportar()">📥 Exportar</button>
+  </div>`;
+
+  document.getElementById('main').innerHTML = html;
+}
+
+function buildPayload() {
+  const equipos = LINEAS[app.linea] || [];
+  return {
+    fecha: new Date().toISOString(),
+    linea: app.linea,
+    tecnico: app.tecnico,
+    supervisor: app.supervisor,
+    producto: app.producto,
+    equipos: equipos.map((eq, ei) => ({
+      nombre: eq.nombre,
+      checks: eq.checks.map((cp, ci) => {
+        const d = (app.datos[ei] && app.datos[ei][ci]) || {m: false, c: ''};
+        return { texto: cp, marcado: d.m, comentario: d.c };
+      })
+    }))
+  };
+}
+
 async function guardar() {
   if (!app.tecnico || !app.supervisor) {
     alert('Selecciona técnico y supervisor');
@@ -447,34 +433,35 @@ async function guardar() {
   render();
   alert('✓ Rutina guardada en la nube');
 }
-    function exportar() {
-      const rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
-      if (!rutinas.length) { alert('Sin rutinas'); return; }
-      let csv = 'RUTINAS PMP - ' + new Date().toLocaleDateString('es-AR') + '\n\n';
-      rutinas.forEach(r => {
-        const equipos = LINEAS[r.linea] || [];
-        csv += r.linea + ' | ' + new Date(r.fecha).toLocaleDateString('es-AR') + ' | ' + r.tecnico + ' | ' + r.supervisor + ' | ' + r.producto + ' | ' + r.porcentaje + '%\n';
-        equipos.forEach((eq, ei) => {
-          let hay = false;
-          eq.checks.forEach((cp, ci) => {
-            if (r.datos[ei] && r.datos[ei][ci] && r.datos[ei][ci].m) {
-              if (!hay) { csv += '\n' + eq.nombre + ':\n'; hay = true; }
-              csv += '  • ' + cp;
-              if (r.datos[ei][ci].c) csv += ' - ' + r.datos[ei][ci].c;
-              csv += '\n';
-            }
-          });
-        });
-        csv += '\n' + '='.repeat(80) + '\n\n';
-      });
-      const blob = new Blob([csv], {type: 'text/csv'});
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'rutinas-pmp-' + new Date().toISOString().split('T')[0] + '.csv';
-      a.click();
-    }
 
-    render();
+function exportar() {
+  const rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
+  if (!rutinas.length) { alert('Sin rutinas'); return; }
+  let csv = 'RUTINAS PMP - ' + new Date().toLocaleDateString('es-AR') + '\n\n';
+  rutinas.forEach(r => {
+    const equipos = LINEAS[r.linea] || [];
+    csv += r.linea + ' | ' + new Date(r.fecha).toLocaleDateString('es-AR') + ' | ' + r.tecnico + ' | ' + r.supervisor + ' | ' + r.producto + ' | ' + r.porcentaje + '%\n';
+    equipos.forEach((eq, ei) => {
+      let hay = false;
+      eq.checks.forEach((cp, ci) => {
+        if (r.datos[ei] && r.datos[ei][ci] && r.datos[ei][ci].m) {
+          if (!hay) { csv += '\n' + eq.nombre + ':\n'; hay = true; }
+          csv += '  • ' + cp;
+          if (r.datos[ei][ci].c) csv += ' - ' + r.datos[ei][ci].c;
+          csv += '\n';
+        }
+      });
+    });
+    csv += '\n' + '='.repeat(80) + '\n\n';
+  });
+  const blob = new Blob([csv], {type: 'text/csv'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'rutinas-pmp-' + new Date().toISOString().split('T')[0] + '.csv';
+  a.click();
+}
+
+render();
   </script>
 </body>
 </html>
