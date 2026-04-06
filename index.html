@@ -350,7 +350,7 @@ function render() {
         <div class="check-comment">
           <textarea onchange="updateComment(${ei},${ci},this.value)" 
           oninput="this.nextElementSibling.textContent=(120-this.value.length)+' restantes'"
-          maxlength="150"
+          maxlength="120"
           placeholder="Agregá detalles (opcional)...">${d.c}</textarea>
           <div style="font-size:11px;color:#6EE7B7;text-align:right;margin-top:4px;">120 restantes</div>
       </div>`;
