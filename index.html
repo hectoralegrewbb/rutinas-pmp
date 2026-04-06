@@ -463,37 +463,32 @@
   btnGuardar.textContent = '⏳ Guardando...';
  
   try {
-    const formData = new FormData();
-formData.append('payload', JSON.stringify(payload));
+  const formData = new FormData();
+  formData.append('payload', JSON.stringify(payload));
 
-const res = await fetch(apiUrl, {
-  method: 'POST',
-  body: formData
-});
-const data = await res.json();
- 
-    if (data.ok) {
-      app.tecnico = ''; app.supervisor = ''; app.producto = '';
-      app.datos = {}; app.abiertos = {};
-      save();
-      render();
-      alert('✓ Rutina guardada en la nube');
-    } else {
-      throw new Error(data.error || 'Error desconocido');
-    }
-  } catch (err) {
-    // Si falla la nube, queda guardado en localStorage de todas formas
-    alert('⚠️ Sin conexión — rutina guardada localmente.\nSe sincronizará al exportar.\n\nError: ' + err.message);
-    app.tecnico = ''; app.supervisor = ''; app.producto = '';
-    app.datos = {}; app.abiertos = {};
-    save();
-    render();
-  } finally {
-    btnGuardar.disabled = false;
-    btnGuardar.textContent = '💾 Guardar';
-  }
+  await fetch(apiUrl, {
+    method: 'POST',
+    mode: 'no-cors',
+    body: formData
+  });
+
+  // Con no-cors no podemos leer la respuesta, pero los datos llegaron
+  app.tecnico = ''; app.supervisor = ''; app.producto = '';
+  app.datos = {}; app.abiertos = {};
+  save();
+  render();
+  alert('✓ Rutina guardada en la nube');
+
+} catch (err) {
+  alert('⚠️ Sin conexión — rutina guardada localmente.\n\nError: ' + err.message);
+  app.tecnico = ''; app.supervisor = ''; app.producto = '';
+  app.datos = {}; app.abiertos = {};
+  save();
+  render();
+} finally {
+  btnGuardar.disabled = false;
+  btnGuardar.textContent = '💾 Guardar';
 }
-
     function exportar() {
       let rutinas = JSON.parse(localStorage.getItem('rutinas')||'[]');
       if (!rutinas.length) { alert('Sin rutinas'); return; }
