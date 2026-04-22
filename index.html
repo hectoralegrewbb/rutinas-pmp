@@ -2,353 +2,1084 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>RUTINAS DE MANTENIMIENTO - Pilares</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>CheckPro — Sistema de Inspección Industrial</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { scroll-behavior: smooth; }
-    body { 
-      background: linear-gradient(135deg, #0f172a 0%, #1a2a3a 100%);
-      color: #e2e8f0; 
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
-      font-size: 16px; 
-      display: flex; 
-      flex-direction: column; 
-      height: 100vh;
-      letter-spacing: 0.3px;
+    :root {
+      --orange: #f97316;
+      --orange-dark: #ea580c;
+      --orange-dim: rgba(249, 115, 22, 0.12);
+      --black: #0a0a0a;
+      --surface: #141414;
+      --surface2: #1c1c1c;
+      --surface3: #242424;
+      --border: rgba(255,255,255,0.07);
+      --border-lit: rgba(249,115,22,0.35);
+      --text: #f0f0f0;
+      --text-soft: #888;
+      --text-dim: #555;
+      --danger: #ef4444;
+      --danger-dim: rgba(239,68,68,0.12);
+      --success: #22c55e;
     }
-    .header { 
-      background: linear-gradient(135deg, #036A3B 0%, #047857 50%, #10b981 100%);
-      padding: 24px 16px;
-      border-bottom: none;
-      box-shadow: 0 8px 32px rgba(16, 185, 129, 0.15);
-    }
-    .header h1 { font-size: 28px; margin-bottom: 6px; font-weight: 700; letter-spacing: 0.5px; }
-    .header p { font-size: 13px; opacity: 0.9; font-weight: 500; }
-    main { flex: 1; overflow-y: auto; padding: 20px; background: linear-gradient(to bottom, rgba(15,23,42,0.5), rgba(26,42,58,0.3)); }
-    main::-webkit-scrollbar { width: 6px; }
-    main::-webkit-scrollbar-track { background: rgba(255,255,255,0.05); }
-    main::-webkit-scrollbar-thumb { background: rgba(16,185,129,0.3); border-radius: 3px; }
-    main::-webkit-scrollbar-thumb:hover { background: rgba(16,185,129,0.5); }
-    .section { 
-      background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(30,41,59,0.4));
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(52,105,139,0.3);
-      border-radius: 16px;
-      padding: 20px;
-      margin-bottom: 16px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    }
-    .grid5 { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; }
-    .field { display: flex; flex-direction: column; gap: 8px; }
-    .label { font-size: 12px; font-weight: 700; color: #cbd5e1; text-transform: uppercase; letter-spacing: 0.8px; opacity: 0.9; }
-    select, input { 
-      padding: 14px 16px;
-      background: rgba(15,23,42,0.6);
-      border: 1px solid rgba(71,85,105,0.5);
-      border-radius: 10px;
-      color: #e2e8f0;
+
+    * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+    html { scroll-behavior:smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
       font-size: 15px;
-      font-family: inherit;
-      backdrop-filter: blur(10px);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
-    select:focus, input:focus { 
-      outline: none;
-      border-color: #10b981;
-      background: rgba(15,23,42,0.9);
-      box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
-    }
-    .equipo { 
-      background: rgba(15,23,42,0.6);
-      border: 1px solid rgba(52,105,139,0.2);
-      border-radius: 12px;
-      margin-bottom: 12px;
-      overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    }
-    .equipo:hover { border-color: rgba(16,185,129,0.3); box-shadow: 0 4px 16px rgba(16,185,129,0.1); }
-    .equipo.abierto { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.05); }
-    .equipo-head { 
-      display: flex; 
-      justify-content: space-between; 
-      align-items: center; 
-      padding: 18px 16px;
-      cursor: pointer; 
-      background: transparent;
-      border-bottom: 1px solid rgba(52,105,139,0.2);
-      user-select: none;
-    }
-    .equipo-head:active { background: rgba(16,185,129,0.08); }
-    .equipo-nombre { font-weight: 600; font-size: 16px; letter-spacing: 0.2px; }
-    .equipo-toggle { 
-      color: #10b981; 
-      font-size: 22px;
+
+    /* ── HEADER ── */
+    .header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 16px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
       display: flex;
       align-items: center;
+      justify-content: space-between;
+      height: 60px;
     }
-    .equipo.abierto .equipo-toggle { transform: rotate(180deg); }
-    .equipo-body { display: none; padding: 16px; }
-    .equipo.abierto .equipo-body { display: block; }
-    .checkpoint { 
-      background: linear-gradient(135deg, rgba(30,41,59,0.6), rgba(30,41,59,0.3));
-      border: 1.5px solid rgba(71,85,105,0.4);
-      border-radius: 10px;
-      padding: 14px;
-      margin-bottom: 10px;
-      border-left: 4px solid #ef4444;
-      cursor: pointer;
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
-    .checkpoint:hover { 
-      border-color: rgba(71,85,105,0.6);
-      background: linear-gradient(135deg, rgba(30,41,59,0.8), rgba(30,41,59,0.5));
-    }
-    .checkpoint.marcado { 
-      border-left-color: #10b981;
-      background: linear-gradient(135deg, rgba(16,185,129,0.12), rgba(16,185,129,0.05));
-      border-color: rgba(16,185,129,0.3);
-      box-shadow: 0 4px 12px rgba(16,185,129,0.1);
-    }
-    .check-header { 
-      display: flex; 
-      gap: 12px; 
-      margin-bottom: 8px; 
-      cursor: pointer; 
-      user-select: none; 
-      align-items: flex-start;
-    }
-    .check-header input { 
-      width: 20px; 
-      height: 20px; 
-      accent-color: #10b981; 
-      margin-top: 2px; 
-      cursor: pointer;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
-    }
-    .check-header input:checked { filter: drop-shadow(0 0 8px rgba(16,185,129,0.4)); }
-    .check-texto { font-size: 15px; flex: 1; line-height: 1.5; }
-    .check-comment { display: none; margin-top: 10px; }
-    .checkpoint.marcado .check-comment { display: block; }
-    .check-comment textarea { 
-      width: 100%; 
-      padding: 12px 14px; 
-      background: rgba(26,35,50,0.6);
-      border: 1px solid rgba(71,85,105,0.4);
+
+    .logo-icon {
+      width: 34px;
+      height: 34px;
+      background: var(--orange);
       border-radius: 8px;
-      color: #e2e8f0; 
-      font-size: 14px; 
-      font-family: inherit;
-      min-height: 70px; 
-      resize: vertical;
-      backdrop-filter: blur(5px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 16px rgba(249,115,22,0.4);
     }
-    .check-comment textarea:focus {
-      outline: none;
-      border-color: #10b981;
-      background: rgba(26,35,50,0.9);
-      box-shadow: 0 0 0 3px rgba(16,185,129,0.1);
+
+    .logo-icon .material-icons-round { font-size: 20px; color: white; }
+
+    .logo-text {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 900;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--text);
     }
-    .botones { 
-      display: flex; 
-      gap: 12px; 
-      padding: 20px; 
-      flex-wrap: wrap;
-      background: linear-gradient(135deg, rgba(30,41,59,0.4), transparent);
-      border-top: 1px solid rgba(52,105,139,0.2);
+
+    .logo-text span { color: var(--orange); }
+
+    .header-badge {
+      font-size: 10px;
+      font-weight: 700;
+      background: var(--orange-dim);
+      color: var(--orange);
+      border: 1px solid var(--border-lit);
+      padding: 3px 10px;
+      border-radius: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* ── TABS ── */
+    .tabs-container {
       position: sticky;
-      bottom: 0;
+      top: 60px;
+      z-index: 40;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 10px 16px;
     }
-    button { 
+
+    .tabs {
+      display: flex;
+      background: var(--surface2);
+      padding: 4px;
+      border-radius: 12px;
+      max-width: 800px;
+      margin: 0 auto;
+      border: 1px solid var(--border);
+      gap: 2px;
+    }
+
+    .tab {
       flex: 1;
-      padding: 14px 20px; 
-      border: none; 
+      text-align: center;
+      padding: 10px 6px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      cursor: pointer;
+      border-radius: 9px;
+      transition: all 0.25s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .tab .material-icons-round { font-size: 16px; }
+
+    .tab:hover:not(.active) { background: var(--surface3); color: var(--text); }
+
+    .tab.active {
+      background: var(--orange);
+      color: white;
+      box-shadow: 0 4px 14px rgba(249,115,22,0.35);
+    }
+
+    .tab.insp-tab.active { background: #7c3aed; box-shadow: 0 4px 14px rgba(124,58,237,0.35); }
+
+    /* ── MAIN ── */
+    main {
+      padding: 16px;
+      flex: 1;
+      max-width: 800px;
+      margin: 0 auto;
+      width: 100%;
+      padding-bottom: 110px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .section-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--text-dim);
+      margin-bottom: 14px;
+    }
+
+    .grid2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px,1fr)); gap: 12px; }
+
+    .field { display: flex; flex-direction: column; gap: 6px; }
+
+    .label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--text-soft);
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 12px 14px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
       border-radius: 10px;
-      font-weight: 600; 
-      font-size: 14px; 
-      cursor: pointer; 
-      min-width: 120px;
+      color: var(--text);
+      font-family: 'Barlow', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.2s;
+      appearance: none;
+    }
+
+    select {
+      background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' width%3D'292.4' height%3D'292.4'%3E%3Cpath fill%3D'%23888' d%3D'M287 69.4a17.6 17.6 0 0 0-13-5.4H18.4c-5 0-9.3 1.8-12.9 5.4A17.6 17.6 0 0 0 0 82.2c0 5 1.8 9.3 5.4 12.9l128 127.9c3.6 3.6 7.8 5.4 12.8 5.4s9.2-1.8 12.8-5.4L287 95c3.5-3.5 5.4-7.8 5.4-12.8 0-5-1.9-9.2-5.5-12.8z'%2F%3E%3C%2Fsvg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px top 50%;
+      background-size: 8px;
+      padding-right: 32px;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: var(--orange);
+      background: var(--surface3);
+      box-shadow: 0 0 0 3px rgba(249,115,22,0.15);
+    }
+
+    select option { background: var(--surface2); }
+
+    /* ── ZONA SELECT ── */
+    .zona-select {
+      font-family: 'Barlow Condensed', sans-serif !important;
+      font-size: 17px !important;
+      font-weight: 800 !important;
+      letter-spacing: 0.5px;
+      border-color: var(--border-lit) !important;
+      color: var(--orange) !important;
+    }
+
+    /* ── EQUIPO ── */
+    .equipo {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      transition: all 0.3s ease;
+    }
+
+    .equipo.abierto {
+      border-color: var(--border-lit);
+      box-shadow: 0 0 20px rgba(249,115,22,0.08);
+    }
+
+    .equipo-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 18px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .equipo-head:active { background: var(--surface3); }
+
+    .equipo-nombre {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.3px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .equipo-num {
+      background: var(--surface3);
+      color: var(--text-soft);
+      width: 26px; height: 26px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 800;
+      transition: all 0.3s;
+      border: 1px solid var(--border);
+    }
+
+    .equipo.abierto .equipo-num {
+      background: var(--orange);
+      color: white;
+      border-color: var(--orange);
+      box-shadow: 0 0 10px rgba(249,115,22,0.4);
+    }
+
+    .equipo-toggle {
+      width: 28px; height: 28px;
+      background: var(--surface3);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--text-soft);
+      transition: transform 0.35s ease, background 0.2s, color 0.2s;
+      border: 1px solid var(--border);
+    }
+
+    .equipo-toggle .material-icons-round { font-size: 16px; }
+
+    .equipo.abierto .equipo-toggle {
+      transform: rotate(180deg);
+      background: var(--orange-dim);
+      color: var(--orange);
+      border-color: var(--border-lit);
+    }
+
+    .equipo-body {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      padding: 0 18px;
+      transition: max-height 0.4s ease, opacity 0.35s ease, padding 0.35s ease;
+      background: var(--surface);
+    }
+
+    .equipo.abierto .equipo-body {
+      max-height: 3000px;
+      opacity: 1;
+      padding: 6px 18px 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* ── CHECKPOINT ── */
+    .checkpoint {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 10px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.2s ease;
+    }
+
+    .checkpoint::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--surface3);
+      transition: background 0.3s;
+    }
+
+    .checkpoint.marcado {
+      border-color: rgba(239,68,68,0.3);
+      background: var(--danger-dim);
+    }
+
+    .checkpoint.marcado::before { background: var(--danger); }
+
+    .check-header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .check-texto {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-soft);
+      line-height: 1.4;
+      flex: 1;
+      transition: color 0.2s;
+    }
+
+    .checkpoint.marcado .check-texto { color: #fca5a5; font-weight: 600; }
+
+    /* Toggle switch dark */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px; height: 28px;
+      flex-shrink: 0;
+    }
+
+    .toggle-switch input { opacity: 0; width: 0; height: 0; }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: var(--surface3);
+      border: 1px solid var(--border);
+      transition: .35s ease;
+      border-radius: 34px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 22px; width: 22px;
+      left: 2px; bottom: 2px;
+      background: var(--text-soft);
+      transition: .35s ease;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider { background: rgba(239,68,68,0.25); border-color: var(--danger); }
+    input:checked + .toggle-slider:before { transform: translateX(22px); background: var(--danger); }
+
+    .toggle-label {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--text-dim);
+      margin-left: 6px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
+      width: 44px;
+      text-align: right;
+      transition: color 0.2s;
     }
-    button:active { transform: scale(0.97); }
-    button:disabled { opacity: 0.4; cursor: not-allowed; transform: none; }
-    .btn-guardar { 
-      background: linear-gradient(135deg, #10b981, #059669);
-      color: #fff;
-      box-shadow: 0 4px 16px rgba(16,185,129,0.3);
+
+    input:checked ~ .toggle-label { color: var(--danger); }
+
+    .check-comment {
+      max-height: 0;
+      opacity: 0;
+      overflow: hidden;
+      transition: all 0.3s ease;
     }
-    .btn-otro { 
-      background: linear-gradient(135deg, #475569, #64748b);
-      color: #e2e8f0;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+
+    .checkpoint.marcado .check-comment { max-height: 160px; opacity: 1; margin-top: 12px; }
+
+    .check-comment textarea {
+      min-height: 70px;
+      resize: vertical;
+      border-color: rgba(239,68,68,0.3);
+      font-size: 13px;
     }
-    footer { 
-      background: rgba(15,23,42,0.8);
+
+    .check-comment textarea:focus { border-color: var(--danger); box-shadow: 0 0 0 3px rgba(239,68,68,0.1); }
+
+    /* ── ACTION DOCK ── */
+    .action-dock {
+      position: fixed;
+      bottom: 16px; left: 16px; right: 16px;
+      max-width: 800px;
+      margin: 0 auto;
+      background: rgba(20,20,20,0.92);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      padding: 12px;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.5), 0 0 0 1px rgba(249,115,22,0.1);
+      display: flex;
+      gap: 10px;
+      z-index: 100;
+    }
+
+    button {
+      flex: 1;
+      padding: 14px;
+      border: none;
+      border-radius: 11px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    button:active:not(:disabled) { transform: scale(0.97); }
+
+    button:disabled { opacity: 0.35; cursor: not-allowed; pointer-events: none; }
+
+    .btn-primary {
+      background: var(--orange);
+      color: white;
+      flex: 2;
+      box-shadow: 0 4px 14px rgba(249,115,22,0.3);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      background: var(--orange-dark);
+      box-shadow: 0 6px 20px rgba(249,115,22,0.4);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      background: var(--surface2);
+      color: var(--text-soft);
+      border: 1px solid var(--border);
+    }
+
+    .btn-ghost:hover { background: var(--surface3); color: var(--text); }
+
+    /* ── MODAL LOGIN ── */
+    .modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.8);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
       backdrop-filter: blur(10px);
-      border-top: 1px solid rgba(52,105,139,0.2);
-      padding: 16px; 
-      text-align: center; 
-      font-size: 12px; 
-      color: #64748b;
     }
-    .selector-linea { margin-bottom: 12px; }
-    .selector-linea select { width: 100%; }
-    @media (max-width: 768px) { 
-      .grid5 { grid-template-columns: 1fr; }
-      .header h1 { font-size: 24px; }
-      body { font-size: 15px; }
-      button { padding: 12px 16px; }
-      main { padding: 16px; }
-      .section { padding: 16px; }
+
+    .modal-content {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 36px 32px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+      box-shadow: 0 24px 64px rgba(0,0,0,0.6);
+      animation: modalPop 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes modalPop {
+      0% { transform: scale(0.85); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-icon {
+      width: 72px; height: 72px;
+      background: var(--orange-dim);
+      border: 1px solid var(--border-lit);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 20px;
+    }
+
+    .modal-icon .material-icons-round { font-size: 36px; color: var(--orange); }
+
+    .modal-content h2 {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+    }
+
+    .modal-content p { font-size: 13px; color: var(--text-soft); margin-bottom: 24px; line-height: 1.5; }
+
+    /* ── INSPECCIÓN MODAL ── */
+    #modalInspeccion {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: 9999;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .insp-sheet {
+      background: var(--surface);
+      width: 100%;
+      max-width: 800px;
+      max-height: 92dvh;
+      border-radius: 20px 20px 0 0;
+      border: 1px solid var(--border);
+      border-bottom: none;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 -12px 48px rgba(0,0,0,0.5);
+      animation: slideUp 0.35s cubic-bezier(0.34, 1.1, 0.64, 1);
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); opacity: 0; }
+      to   { transform: translateY(0); opacity: 1; }
+    }
+
+    .insp-header {
+      padding: 18px 20px 14px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-shrink: 0;
+      background: var(--surface2);
+    }
+
+    .insp-title {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 19px;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .insp-title .material-icons-round { color: #7c3aed; font-size: 20px; }
+
+    .insp-subtitle { font-size: 12px; color: var(--text-soft); margin-top: 3px; }
+
+    .insp-meta {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid var(--border-lit);
+      padding: 4px 10px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: inline-flex;
+      gap: 8px;
+    }
+
+    .insp-close {
+      background: var(--surface3) !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text-soft) !important;
+      flex: 0 !important;
+      width: 36px !important;
+      height: 36px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+    }
+
+    .insp-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 14px 16px;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .insp-body::-webkit-scrollbar { display: none; }
+
+    .insp-footer {
+      padding: 12px 16px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      flex-shrink: 0;
+      background: var(--surface2);
+      padding-bottom: max(12px, env(safe-area-inset-bottom));
+    }
+
+    .insp-punto {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .insp-punto-header { display: flex; justify-content: space-between; align-items: center; }
+
+    .insp-punto-num {
+      font-family: 'Barlow Condensed', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--orange);
+      background: var(--orange-dim);
+      border: 1px solid var(--border-lit);
+      padding: 3px 10px;
+      border-radius: 20px;
+    }
+
+    .insp-btn-del {
+      background: var(--danger-dim) !important;
+      color: var(--danger) !important;
+      border: 1px solid rgba(239,68,68,0.3) !important;
+      flex: 0 !important;
+      width: 30px !important; height: 30px !important;
+      padding: 0 !important;
+      border-radius: 50% !important;
+      box-shadow: none !important;
+    }
+
+    .btn-add {
+      flex: 0 !important;
+      min-width: 48px !important;
+      height: 48px !important;
+      padding: 0 !important;
+      border-radius: 11px !important;
+      background: var(--surface3) !important;
+      color: var(--text-soft) !important;
+      border: 1px dashed var(--border) !important;
+      font-size: 22px !important;
+    }
+
+    .btn-send {
+      flex: 1 !important;
+      height: 48px !important;
+      background: #7c3aed !important;
+      color: white !important;
+      box-shadow: 0 4px 14px rgba(124,58,237,0.3) !important;
+    }
+
+    /* ── STATUS BAR ── */
+    .status-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      margin-bottom: 14px;
+    }
+
+    .status-user {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--orange);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-user .material-icons-round { font-size: 16px; }
+
+    .btn-logout {
+      background: none !important;
+      border: 1px solid var(--border) !important;
+      color: var(--text-soft) !important;
+      flex: none !important;
+      padding: 6px 12px !important;
+      border-radius: 8px !important;
+      font-size: 11px !important;
+      box-shadow: none !important;
+    }
+
+    /* ── TICKET FORM ── */
+    .ticket-urgency-row { display: flex; gap: 8px; margin-top: 4px; }
+
+    .urgency-chip {
+      flex: 1;
+      padding: 10px 6px;
+      border-radius: 10px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      text-align: center;
+      border: 1.5px solid var(--border);
+      background: var(--surface2);
+      color: var(--text-soft);
+      transition: all 0.2s;
+    }
+
+    .urgency-chip.selected-low  { border-color: var(--success); color: var(--success); background: rgba(34,197,94,0.1); }
+    .urgency-chip.selected-med  { border-color: var(--orange); color: var(--orange); background: var(--orange-dim); }
+    .urgency-chip.selected-high { border-color: var(--danger); color: var(--danger); background: var(--danger-dim); }
+
+    /* ── TOAST ── */
+    #cp-toast {
+      position: fixed;
+      bottom: 90px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 0.3px;
+      z-index: 99999;
+      opacity: 0;
+      pointer-events: none;
+      white-space: nowrap;
+      transition: opacity 0.3s;
+      max-width: 90vw;
+    }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    /* ── DEMO BADGE ── */
+    .demo-ribbon {
+      position: fixed;
+      top: 0; right: 0;
+      background: var(--orange);
+      color: white;
+      font-family: 'Barlow Condensed', sans-serif;
+      font-weight: 800;
+      font-size: 10px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      padding: 4px 14px 4px 10px;
+      clip-path: polygon(8px 0%, 100% 0%, 100% 100%, 0% 100%);
+      z-index: 200;
+      opacity: 0.85;
     }
   </style>
 </head>
 <body>
-  <div class="header">
-    <h1>RUTINAS DE MANTENIMIENTO</h1>
-    <p>Inspección Semanal - Pilares</p>
+
+<div class="demo-ribbon">DEMO</div>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="logo">
+    <div class="logo-icon"><span class="material-icons-round">checklist_rtl</span></div>
+    <div class="logo-text">Check<span>Pro</span></div>
   </div>
+  <div class="header-badge">v2.4 · Industrial</div>
+</div>
 
-  <main id="main"></main>
+<!-- TABS -->
+<div class="tabs-container">
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('rutinas')" id="tab-rutinas">
+      <span class="material-icons-round">assignment_turned_in</span> Rutinas
+    </div>
+    <div class="tab" onclick="switchTab('tickets')" id="tab-tickets">
+      <span class="material-icons-round">build_circle</span> Tickets
+    </div>
+    <div class="tab insp-tab" onclick="abrirInspeccion()" id="tab-inspeccion">
+      <span class="material-icons-round">manage_search</span> Inspección
+    </div>
+  </div>
+</div>
 
-  <footer>Pilares © 2026</footer>
+<!-- MODAL LOGIN -->
+<div class="modal-overlay" id="loginModal">
+  <div class="modal-content">
+    <div class="modal-icon"><span class="material-icons-round">badge</span></div>
+    <h2>Identificación</h2>
+    <p>Ingresá tu email para registrar tus inspecciones en el sistema.</p>
+    <div class="field" style="margin-bottom:12px;">
+      <input type="email" id="manualEmail" placeholder="usuario@empresa.com"
+             onkeydown="if(event.key==='Enter') loginManual()">
+    </div>
+    <button class="btn-primary" onclick="loginManual()" style="width:100%;">
+      <span class="material-icons-round">login</span> Acceder al sistema
+    </button>
+  </div>
+</div>
 
-  <script>
-    const apiUrl = 'https://script.google.com/macros/s/AKfycby-fMP_6eco_zZIdYcaw9xGVzet4BBC_RVn0xZB3GJ3tE2utHk6c2cvXOL7_Cv6oQL9Mw/exec';
+<!-- MODAL INSPECCIÓN -->
+<div id="modalInspeccion" onclick="if(event.target===this) cerrarInspeccion()">
+  <div class="insp-sheet">
+    <div class="insp-header">
+      <div>
+        <div class="insp-title">
+          <span class="material-icons-round">manage_search</span>
+          Inspección Puntual
+        </div>
+        <div class="insp-subtitle">Relevá hallazgos fuera de rutina</div>
+        <div class="insp-meta" id="insp-meta">— / —</div>
+      </div>
+      <button class="insp-close" onclick="cerrarInspeccion()">
+        <span class="material-icons-round" style="font-size:18px;">close</span>
+      </button>
+    </div>
+    <div class="insp-body" id="insp-container"></div>
+    <div class="insp-footer">
+      <button class="btn-add" onclick="agregarPunto()" type="button">
+        <span class="material-icons-round">add</span>
+      </button>
+      <button class="btn-send" id="insp-btn-enviar" onclick="enviarInspeccion()" type="button">
+        <span class="material-icons-round">send</span> Enviar inspección
+      </button>
+    </div>
+  </div>
+</div>
 
-    const LINEAS = {
-      "Línea 1": [{nombre:"Amasadora",checks:["El equipo no funciona correctamente","Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero", "Otros"]},{nombre:"Cortadora",checks:["El equipo no funciona correctamente","No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea y bujes presentan huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente", "Otros"]},{nombre:"Dulcera",checks:["El equipo está funcionando correctamente","El equipo presenta pérdidas","Las mangueras se encuentran en buen estado","El pistón está funcionando correctamente","El buje que acopla el pistón con la válvula de inyectado está en buen estado", "Otros"]},{nombre:"Cubo de dulce",checks:["El mezclador no está funcionando","El motor del mezclador presenta algún ruido extraño y/o huelgo","El reductor del mezclador no posee aceite y/o presenta pérdidas","La cadena precisa lubricación y/o posee desgaste","El reductor se encuentra con pérdidas de aceite","La bomba de transporte tiene pérdidas","La cañería de transporte presenta alguna pérdida", "Otros"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo", "Otros"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","Micarta en mal estado", "Otros"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones", "Otros"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección", "Otros"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado", "Otros"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Piñones en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite", "Otros"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro","Pérdidas de aceite en reductores", "Otros"]},{nombre:"Detector de metales",checks:["El equipo no funciona correctamente","El indicador luminoso no está funcionando","Ruidos anormales","No está activado en el HMI el detector de metales y/o detectores de metales: parar marcha", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 2": [{nombre:"Amasadora",checks:["Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero", "Otros"]},{nombre:"Rotativa",checks:["Las protecciones no están colocadas","Lona en mal estado","Bujes están en mal estado","El equipo precisa lubricación","Las botoneras/pulsadores/selectoras funcionan correctamente","Poleas en mal estado, con huelgo o desperfectos","Cadenas/Correas en mal estado o con falta de lubricación", "Otros"]},{nombre:"Cortadora",checks:["No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea presenta huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente", "Otros"]},{nombre:"Azucarador",checks:["La sujeción del motovibrador está en mal estado","Tacos de goma en mal estado","Chapas de vibración en mal estado","Bandeja recuperadora de azúcar en mal estado", "Otros"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo", "Otros"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","El extractor de aire requiere revisión","Micarta en mal estado", "Otros"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones", "Otros"]},{nombre:"Cinta de enfriado",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección", "Otros"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado", "Otros"]},{nombre:"Cinta colectora de entrada a masipack",checks:["Cinta en mal estado","Eje en mal estado","El equipo precisa lubricación","Rodamientos en mal estado","El motorreductor presenta pérdidas de aceite y/o falta de aceite", "Otros"]},{nombre:"Masipack",checks:["El sellado vertical no está funcionando","El sellado horizontal no está funcionando","Hay vibradores lineales que no están funcionando","Hay balanzas que no están funcionando","El vibrador central no está funcionando","Hay tolvas que no están abriendo y cerrando correctamente","El panel de HMI no funciona correctamente","Las seguridades de puertas no están funcionando","Las mordazas necesitan lubricación","Los tableros eléctricos no se encuentran cerrados","El fechador no está funcionando","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","No funcionan correctamente los pulsadores de marcha/parada","No funciona correctamente la parada de emergencia","Hay pérdidas de aire y/o aceite en el equipo","Se escucha algún ruido extraño en la máquina y/o tableros","El FRL necesita ser purgado y/o necesita cambio de filtro/manómetro", "Otros"]},{nombre:"Detector de metales",checks:["No funciona correctamente el paro de emergencia","No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 3": [{nombre:"Amasadora",checks:["Se denotan movimientos, roces y/o ruidos extraños","El equipo precisa lubricación","El motor físicamente se encuentra sucio","Las botoneras/pulsadores/selectoras no funcionan correctamente","El caudalímetro presenta alguna pérdida","Las cañerías de materia harina/azúcar presentan pérdidas","El FRL precisa purgarse, tiene pérdidas y/o precisa cambio de filtro o manómetro","Los carros se encuentran con filos/rebarbas peligrosos para el usuario","El reductor de la amasadora no posee aceite y/o presenta pérdidas","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero", "Otros"]},{nombre:"Rotativa",checks:["Las protecciones no están colocadas","Lona en mal estado","Bujes están en mal estado","El equipo precisa lubricación","Las botoneras/pulsadores/selectoras funcionan correctamente","Poleas en mal estado, con huelgo o desperfectos","Cadenas/Correas en mal estado o con falta de lubricación", "Otros"]},{nombre:"Cortadora",checks:["No se denotan movimientos, roces y/o ruidos extraños","El motor se encuentra físicamente sucio","No se encuentran todas sus protecciones colocadas","La lona no se encuentra en buen estado","La cortadora de alambre precisa lubricación","Las correas del motor no se encuentran en buen estado","La polea presenta huelgo y/o desgaste","El tablero no se encuentra cerrado","Se perciben ruidos extraños del tablero","Las botoneras/pulsadores/selectoras funcionan correctamente", "Otros"]},{nombre:"Cinta intermedia de entrada",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o se encuentran en mal estado","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones","El motor presenta algún ruido extraño y/o huelgo", "Otros"]},{nombre:"Horno",checks:["Las alarmas de desplazamiento no funcionan correctamente","El FRL precisa ser purgado, tiene pérdidas y/o requiere cambio de filtro o manómetro","Las botoneras/pulsadores no funcionan correctamente","No funciona el cepillo interno","No funciona el cepillo externo","Los rodillos grandes no tienen rapador","El extractor de aire requiere revisión","Micarta en mal estado", "Otros"]},{nombre:"Cinta intermedia de salida",checks:["La cinta intermedia se encuentra en mal estado","Los bujes están obstruidos y/o presentan huelgo","Los rodillos están obstruidos y/o precisan limpieza","Se precisan lubricar bujes y/o cadenas","Faltan protecciones", "Otros"]},{nombre:"Cinta de enfriado 1",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección", "Otros"]},{nombre:"Stacker",checks:["Cinta en mal estado","Huelgo en poleas/ejes","Reductores con pérdidas de aceite","Guías sueltas y/o dañadas","Ruidos anormales", "Otros"]},{nombre:"Cinta de enfriado 2",checks:["Varillas faltantes y/o en mal estado","Malla en mal estado","El equipo precisa lubricación","La puntera del eje de cinta necesita ser revisada","Funcionan los ventiladores","Ventiladores sueltos y/o con falta de protección", "Otros"]},{nombre:"Alipack",checks:["No funcionan correctamente las seguridades","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","El fechador no funciona correctamente","No funciona correctamente el sellado","Cinta de salida en mal estado","Porta bobina flojo y/o funcionando mal","Ruidos anormales","Pérdidas de aire","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Fripack Backup",checks:["La pantalla no está funcionando correctamente","Porta bobina flojo y/o funcionando mal","No están sellando los discos","No está cortando la mordaza","No está sellando la mordaza","No funciona correctamente el paro de emergencia","No funcionan las botoneras","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Detector de metales",checks:["No funciona correctamente el paro de emergencia","No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 4": [{nombre:"Batidora Tonelli",checks:["Faltan protecciones","Pérdidas de materia prima","Pérdidas de masa","Pérdidas de aceite","El equipo presenta ruidos extraños","Mangueras y/o abrazaderas en mal estado","No funcionan las botoneras","Cables desordenados, sueltos o en mal estado","Correas en mal estado","Piñones/Ejes con huelgo o desgaste","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Batidora Geomixer",checks:["Faltan protecciones","Pérdidas de masa","Pérdidas de aceite","El equipo presenta ruidos extraños","No funcionan las botoneras","Cables desordenados, sueltos o en mal estado","Correas en mal estado","Piñones/Ejes con huelgo o desgaste","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Capsuladora",checks:["El equipo presenta ruidos extraños","No se encuentran en buen estado los componentes de seguridad","Pérdidas de aire","Pérdidas de vacío","Ventosas en mal estado","Pérdidas de aceite","Falta de protecciones","Cables desordenados, sueltos o en mal estado","No funcionan las botoneras", "Otros"]},{nombre:"Cadenas transportadoras",checks:["Piñones con huelgo o en mal estado","Cadenas en mal estado","Guías rotas, con desgaste o faltantes","Ruedas guías trabadas o rotas","Motores con alta temperatura y/o ruidos extraños","Reductores con pérdidas de aceite y/o ruidos extraños","Huelgo en ejes","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Dosificadora",checks:["Pérdidas de masa","Pérdidas de aire","No se encuentran en buen estado los componentes de seguridad","Protecciones faltantes","Mangueras de aire en mal estado","Movimiento extraño en la dosificadora","No funcionan correctamente los sensores", "Otros"]},{nombre:"Azucarador",checks:["Lona en mal estado","Tensor neumático en mal estado","Protecciones faltantes", "Otros"]},{nombre:"Bombas dosificadoras",checks:["Protecciones faltantes","Pérdidas de masa en bomba de vainilla","Pérdidas de aceite","Pérdidas de masa en bomba de chocolate","Ruidos extraños","Pérdidas en cañería de transporte de masa","Manguera de vainilla en mal estado","Manguera de chocolate en mal estado","Tableros abiertos","No funcionan las botoneras","Cables sueltos y/o desordenados","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Horno",checks:["No está funcionando correctamente el empujador de bandejas","Taparelas rotas, faltantes o sueltas","La cadena de tracción necesita lubricación o limpieza","No funciona correctamente uno o más quemadores","No funciona correctamente uno o más forzadores","Ruidos extraños o anormales","Controladores de llama sueltos o dañados","No funcionan las botoneras","Pantalla táctil en mal estado","Pérdidas de aire","Pérdidas de aceite","No funciona alguno de los coolers de los motores laterales","Las temperaturas de los motores exceden los 100°C", "Otros"]},{nombre:"Buffer",checks:["Sensores/Espejos en mal estado","No se encuentran en buen estado los componentes de seguridad","Guías en mal estado","Mangueras de aire en mal estado","Pérdidas de aire","Pérdidas de aceite","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Inyectadora",checks:["Pérdidas de dulce","Pérdidas de aire","No se encuentran en buen estado los componentes de seguridad","Protecciones faltantes","Mangueras de aire en mal estado","Movimiento extraño en la inyectadora","No funciona la calefacción de la tolva","No funciona el agitador de dulce","Guías y frenos de APM en mal estado","No funcionan las botoneras","Pantalla táctil en mal estado", "Otros"]},{nombre:"Cubo de dulce",checks:["No funciona correctamente la calefacción","No funciona correctamente el mezclador","No funciona correctamente el pistón de prensa","Pérdidas de dulce en cañería de transporte","Pérdidas de dulce en bomba dosificadora","No funcionan las botoneras","Pérdidas de aire","Pérdidas de aceite","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Desmoldeadora",checks:["Varillas en mal estado","Pérdidas de aceite","No se encuentran en buen estado los componentes de seguridad","El equipo precisa lubricación","No funcionan correctamente los sensores","Mangueras en mal estado","Cadenas y cintas en mal estado","Piñones con huelgo o desgaste","Ruidos extraños o anormales", "Otros"]},{nombre:"Cinta de enfriado",checks:["Lona en mal estado","Estructura floja o con tornillos faltantes","Huelgo en ejes","Ruidos extraños o anormales","Pérdidas de aire","Pérdidas de aceite","Las temperaturas de los motores exceden los 90°C","Mangueras en mal estado", "Otros"]},{nombre:"Alineador, estaciones y cintas transportadoras",checks:["Lonas en mal estado","Estructura floja o con tornillos faltantes","Huelgo en ejes","Ruidos extraños o anormales","Pérdidas de aire","Pérdidas de aceite","Piñones en mal estado y/o con huelgo","Cadenas en mal estado","No funcionan correctamente los sensores","Cables sueltos o desordenados","Las temperaturas de los motores exceden los 90°C","Mangueras en mal estado", "Otros"]},{nombre:"Fripack 1",checks:["Cintas de transporte en mal estado","Cinta de eslabones en mal estado","Bandas verdes en mal estado","Pérdidas de aceite","Pérdidas de aire","Punteras dañadas, trabadas o faltantes","Guías rotas o faltantes","Protecciones faltantes","Cadena de índices en mal estado","Tablero de cintas y/o tablero principal abiertos","Ruidos extraños o anormales","No funciona correctamente el porta bobina","No funciona correctamente el auto-empalme","No funcionan correctamente las botoneras","No funcionan correctamente las resistencias de mordazas","No funcionan correctamente las resistencias de los discos","Las termocuplas no funcionan correctamente","Colectores sucios","Carbones sucios y/o gastados","No funciona correctamente el HMI","Las temperaturas de los motores exceden los 90°C","No funcionan los coolers de enfriado de motores","Mangueras en mal estado", "Otros"]},{nombre:"Fripack 2",checks:["Cintas de transporte en mal estado","Cinta de eslabones en mal estado","Bandas verdes en mal estado","Pérdidas de aceite","Pérdidas de aire","Punteras dañadas, trabadas o faltantes","Guías rotas o faltantes","Protecciones faltantes","Cadena de índices en mal estado","Tablero de cintas y/o tablero principal abiertos","Ruidos extraños o anormales","No funciona correctamente el porta bobina","No funciona correctamente el auto-empalme","No funcionan correctamente las botoneras","No funcionan correctamente las resistencias de mordazas","No funcionan correctamente las resistencias de los discos","Las termocuplas no funcionan correctamente","Colectores sucios","Carbones sucios y/o gastados","No funciona correctamente el HMI","Las temperaturas de los motores exceden los 90°C","No funcionan los coolers de enfriado de motores","Mangueras en mal estado", "Otros"]},{nombre:"Alipack",checks:["Cadena de índices en mal estado","Cadena de aéreo en mal estado","Pérdidas de aceite","Pérdidas de aire","Piñones con huelgo y/o desgaste","Guías rotas o faltantes","Protecciones faltantes","Tablero abierto","Ruidos extraños o anormales","No funciona correctamente el porta bobina","No funcionan correctamente las botoneras","No funciona correctamente el encoder de fechado","No funcionan correctamente las resistencias de mordazas","No funcionan correctamente las resistencias de los discos","Las termocuplas no funcionan correctamente","Mercotac dañado y/o trabado","No funciona correctamente el HMI","Las temperaturas de los motores exceden los 90°C","No funcionan los coolers del tablero","Lona de cinta de salida en mal estado","Mangueras en mal estado", "Otros"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado", "Otros"]},{nombre:"Masipack",checks:["No funcionan correctamente las seguridades","No funciona correctamente la pantalla táctil","Faltan protecciones","Cintas de entrada en mal estado","El fechador no funciona correctamente","No funciona correctamente el sellado vertical","No funciona correctamente el sellado horizontal","No funcionan todos los vibradores lineales","No funcionan todas las balanzas","El vibrador central no está funcionando","No están funcionando todas las tolvas","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","Cinta de salida en mal estado","Desenrollador de bobina flojo y/o funcionando mal","Ruidos anormales","Pérdidas de aire","Pérdidas de aceite","Las temperaturas de los motores exceden los 90°C","Mangueras en mal estado", "Otros"]},{nombre:"Detector de metales",checks:["No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 5": [{nombre:"Amasadora San Cassiano",checks:["Protecciones faltantes","Las botoneras no funcionan correctamente","Los rodamientos de las ruedas no giran correctamente/se traban","Ruidos anormales","La sujeción de los batidores está en mal estado/le faltan bulones","La válvula de dosificación de materia prima está trabada/rota/en mal estado","Las mangueras se encuentran resecas","El tablero eléctrico se encuentra abierto","Acrílico roto/faltante/en mal estado","HMI roto/en mal estado","Ruedas de goma en mal estado","Eje con huelgo","Pérdidas de aceite","Patas de anclaje en mal estado", "Otros"]},{nombre:"Ollas de San Cassiano",checks:["Olla 1 con ruedas en mal estado","Olla 2 con ruedas en mal estado","Olla 1 despintada, posible riesgo de contaminación","Olla 2 despintada, posible riesgo de contaminación", "Otros"]},{nombre:"Amasadora Previa",checks:["Protecciones faltantes","Las botoneras no funcionan correctamente","Los rodamientos de las ruedas no giran correctamente/se traban","Ruidos anormales","La sujeción de los batidores está en mal estado/le faltan bulones","La válvula de dosificación de materia prima está trabada/rota/en mal estado","Las mangueras se encuentran resecas","El tablero eléctrico se encuentra abierto","Eje con huelgo","Pérdidas de aceite","Patas de anclaje en mal estado","Ruedas de grillón en mal estado", "Otros"]},{nombre:"Divisora Indupan",checks:["Las seguridades no funcionan correctamente","El equipo precisa lubricación","Lona en mal estado","Ruedas en mal estado","Rodamientos trabados/en mal estado","Ruidos anormales en equipo","Eje con huelgo","Rodillo de tracción de cinta en mal estado","Protecciones faltantes", "Otros"]},{nombre:"Divisora Cónica",checks:["Las seguridades no funcionan correctamente","El equipo precisa lubricación","Lona en mal estado","Ruedas en mal estado","Rodamientos trabados/en mal estado","Ruidos anormales en equipo","Eje con huelgo","Rodillo de tracción de cinta en mal estado","Protecciones faltantes", "Otros"]},{nombre:"Rebolladora Cónica",checks:["Las seguridades no funcionan correctamente","El harinador no se encuentra en buen estado","El piñón presenta desgaste","El equipo precisa lubricación","Guías en mal estado","Ruedas en mal estado", "Otros"]},{nombre:"Rebolladora Plana",checks:["Las seguridades no funcionan correctamente","El harinador no se encuentra en buen estado","El piñón presenta desgaste","El equipo precisa lubricación","Guías en mal estado","Ruedas en mal estado","Lona en mal estado","Eje con desgaste","Rodamiento trabado/en mal estado","Faltante de protecciones","Cadena en mal estado/destensada", "Otros"]},{nombre:"Cámara de fermentación",checks:["Luces quemadas","Guías de carros en mal estado","Manijas de puertas en mal estado","Tableros eléctricos abiertos","Las botoneras/manetas no funcionan correctamente","Turbinas mal estado","Mangueras de turbinas se encuentran sueltas","Control de temperatura no funciona correctamente","Control de humedad no funciona correctamente", "Otros"]},{nombre:"Hornos (1-7)",checks:["Manija de puerta en mal estado","La posición de la flecha al detener el horno no es la correcta","La elevación o rotación de carros no funciona correctamente","Ruidos anormales en motores, reductores o rodamientos","Manómetro de quemador roto/en mal estado","El timbre no funciona correctamente","Correa y/o polea con desgaste o huelgo","Las botoneras no funcionan correctamente","El quemador no posee la protección","El vidrio se encuentra en mal estado","El tablero eléctrico se encuentra abierto","No abre/cierra correctamente la clapeta","La rampa de entrada no se encuentra en buen estado","Pérdidas de aceite", "Otros"]},{nombre:"Zona de enfriado",checks:["Aspas sueltas/en mal estado","Tablero eléctrico abierto","Las botoneras/selectoras no funcionan correctamente","No están funcionando todos los motores", "Otros"]},{nombre:"Tanque de alcohol",checks:["Mangueras en mal estado","Manómetro roto/en mal estado","El sensor no funciona correctamente","La alarma sonora no está funcionando correctamente", "Otros"]},{nombre:"Fripack",checks:["Cintas transportadoras en mal estado","Pérdidas de aceite","Pérdidas de aire","Porta bobinas no funciona correctamente","Freno de bobina en mal estado","Rodillos trabados o frenados","Cadena de índices en mal estado","Los tableros eléctricos no se encuentran cerrados","Punteras dañadas, trabadas o faltantes","No funciona correctamente el HMI","No funcionan correctamente las resistencias de mordazas","No funcionan correctamente las resistencias de los discos","Las termocuplas no funcionan correctamente","No funcionan correctamente las botoneras","Acrílicos rotos o en mal estado","Cuchilla rota o con faltante de guías/resortes","Las temperaturas de los motores exceden los 90°C","No funcionan los coolers de enfriado de motores", "Otros"]},{nombre:"Detector de Metales",checks:["No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 6": [{nombre:"Geiger",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","Faltan piezas en la máquina","Ruido anormal","Cuchillas en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Mix 1",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cuchillas en mal estado","Cables desordenados, sueltos o en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"KWL",checks:["No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","Conexiones desajustadas y/o sueltas", "Otros"]},{nombre:"Chancha 1",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Conexiones de agua de recirculación en mal estado","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cables desordenados, sueltos o en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Mix 2",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cuchillas en mal estado","Cables desordenados, sueltos o en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Chancha 2",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Conexiones de agua de recirculación en mal estado","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cables desordenados, sueltos o en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Amasado",checks:["No funciona la batidora","No funciona la bomba de transporte","No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","No funciona o tiene pérdidas el caudalímetro","Pérdida de masa por empaquetadura","Ruido anormal","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Horno",checks:["Se encuentran puertas abiertas","Faltan protecciones","No funciona el paro de emergencia","No funcionan las botoneras","Cadena de barredores en mal estado","Clapetas en mal estado","No funciona correctamente la pantalla táctil","No funciona correctamente la bomba de dosificado","Cadena de sincronismo en mal estado","No funcionan correctamente los sopladores","Abre/Cierra planchas en mal estado","Faltan correas y/o están en mal estado (salida del horno)","No funcionan correctamente los sensores de temperatura","No funcionan correctamente los sensores de posición de placas","Extracción de aire no está funcionando y/o presenta ruidos anormales","Las temperaturas de los motores exceden los 90°C","Faltan barredores","El patín de la cadena de barredores se encuentra con desgaste", "Otros"]},{nombre:"Torre de enfriado",checks:["Faltan correas y/o están en mal estado","No funcionan correctamente las correas centradoras","Guías desajustadas o rotas","Varillas en mal estado","No funcionan correctamente los sensores","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Dosificadora de crema/encremadora",checks:["No funciona correctamente la seguridad","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","No funcionan correctamente los sensores","Faltan protecciones","No funciona correctamente el primer encremado","No funciona correctamente el segundo encremado","Faltan correas o están en mal estado (en caso afirmativo especificar en dónde)","Falta y/o está roto el acrílico del espiral","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Varpe",checks:["Están funcionando correctamente los motores","Faltan o están gastadas las bandas","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Heladera",checks:["Las puertas están abiertas","No funciona correctamente el paro de emergencia","No funcionan correctamente los sensores","Faltan correas","Ganchos doblados","Cableado desordenado", "Otros"]},{nombre:"Cortadora",checks:["No funciona correctamente la seguridad","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","Bandas en mal estado","No funciona correctamente el apilador","No funciona correctamente el segundo corte","No funcionan correctamente los sensores","No funcionan correctamente las botoneras","Cinta de salida en mal estado","No funciona correctamente el empujador aéreo","Cinta de empujador aéreo en mal estado","Cinta curva en mal estado","Faltan tensores en la cinta curva","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Focus",checks:["No funcionan correctamente las seguridades","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","Faltan protecciones","Cintas de entrada en mal estado","Las temperaturas de las mordazas pueden visualizarse en la pantalla","Empujador de índices en mal estado y/o con faltantes","El fechador no funciona correctamente","No funciona correctamente el sellado","Cinta de salida en mal estado","Porta bobina flojo y/o funcionando mal","Ruidos anormales","Pérdidas de aire","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Cinta de elevación",checks:["Algunos laterales se encuentran rotos y/o sueltos","El soporte del motor se encuentra en mal estado", "Otros"]},{nombre:"Masipack",checks:["No funcionan correctamente las seguridades","No funciona correctamente la pantalla táctil","Faltan protecciones","Cintas de entrada en mal estado","El fechador no funciona correctamente","No funciona correctamente el sellado vertical","No funciona correctamente el sellado horizontal","No funcionan todos los vibradores lineales","No funcionan todas las balanzas","El vibrador central no está funcionando","No están funcionando todas las tolvas","Las temperaturas de las mordazas no pueden visualizarse en la pantalla","Cinta de salida en mal estado","Desenrollador de bobina flojo y/o funcionando mal","Ruidos anormales","Pérdidas de aire","Pérdidas de aceite","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Detector de metales",checks:["No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Fripack Fourpack",checks:["El equipo no está funcionando correctamente","La pantalla no está funcionando correctamente","Porta bobina flojo y/o funcionando mal","No están sellando los discos","No está cortando la mordaza","No está sellando la mordaza","No funciona correctamente el paro de emergencia","No funcionan las botoneras","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Línea 7": [{nombre:"Geiger",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","Faltan piezas en la máquina","Ruido anormal","Cuchillas en mal estado","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Mix 1",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cuchillas en mal estado","Cables desordenados, sueltos o en mal estado","La temperatura del motor excede los 90°C", "Otros"]},{nombre:"KWL",checks:["No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","Conexiones desajustadas y/o sueltas", "Otros"]},{nombre:"Chancha 1",checks:["No funciona la seguridad de la tapa","No funciona el paro de emergencia","Faltan protecciones","Conexiones de agua de recirculación en mal estado","Pérdida de crema","Pérdida de agua","Mangueras y/o abrazaderas de encamisado en mal estado","No funcionan las botoneras","Faltan piezas de la máquina","Ruido anormal","Cables desordenados, sueltos o en mal estado","La temperatura del motor excede los 90°C", "Otros"]},{nombre:"Amasado",checks:["No funciona la batidora","No funciona la bomba de transporte","No funciona el paro de emergencia","Faltan protecciones","No funcionan las botoneras","No funciona o tiene pérdidas el caudalímetro","Pérdida de masa por empaquetadura","Ruido anormal","La temperatura del motor excede los 90°C", "Otros"]},{nombre:"Horno",checks:["Se encuentran puertas abiertas","Faltan protecciones","No funciona el paro de emergencia","No funcionan las botoneras","Cadena de barredores en mal estado","Clapetas en mal estado","No funciona correctamente la pantalla táctil","No funciona correctamente la bomba de dosificado","Cadena de sincronismo en mal estado","No funcionan correctamente los sopladores","Abre/Cierra planchas en mal estado","Faltan correas y/o están en mal estado (salida del horno)","No funcionan correctamente los sensores de temperatura","No funcionan correctamente los sensores de posición de placas","Extracción de aire no está funcionando y/o presenta ruidos anormales","La temperatura del motor excede los 90°C","Faltan barredores","El patín de la cadena de barredores se encuentra con desgaste", "Otros"]},{nombre:"Torre de enfriado",checks:["Faltan correas y/o están en mal estado","No funcionan correctamente las correas centradoras","Guías desajustadas o rotas","Varillas en mal estado","No funcionan correctamente los sensores","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Dosificado de crema/encremadora",checks:["No funciona correctamente la seguridad","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","No funcionan correctamente los sensores","Faltan protecciones","No funciona correctamente la encremadora","Faltan correas o están en mal estado (en caso afirmativo especificar en dónde)","Falta y/o está roto el acrílico del espiral","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Heladera",checks:["Se encuentran puertas abiertas","No funciona correctamente el paro de emergencia","No funcionan correctamente los sensores","Faltan o están en mal estado las correas","Ganchos doblados o rotos","Cableado desordenado y/o en mal estado", "Otros"]},{nombre:"Cortadora",checks:["No funciona correctamente la seguridad","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","Bandas en mal estado","No funciona correctamente el apilador","No funciona correctamente el segundo corte","No funcionan correctamente los sensores","No funcionan correctamente las botoneras","Cinta de salida en mal estado","No funciona correctamente el empujador aéreo","Cinta de empujador aéreo en mal estado","Cinta curva en mal estado","Faltan tensores en la cinta curva","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Focus",checks:["No funcionan correctamente las seguridades","No funciona correctamente el paro de emergencia","No funciona correctamente la pantalla táctil","Faltan protecciones","Cintas de entrada en mal estado","Empujador de índices en mal estado y/o con faltantes","El fechador no funciona correctamente","No funciona correctamente el sellado","Cinta de salida en mal estado","Porta bobina flojo y/o funcionando mal","Ruidos anormales","Pérdidas de aire","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Fripack Fourpack",checks:["El equipo no está funcionando correctamente","La pantalla no está funcionando correctamente","Porta bobina flojo y/o funcionando mal","No están sellando los discos","No está cortando la mordaza","No está sellando la mordaza","No funciona correctamente el paro de emergencia","No funcionan las botoneras","Las temperaturas de los motores exceden los 90°C", "Otros"]},{nombre:"Detector de metales",checks:["No funciona correctamente el paro de emergencia","No funciona correctamente la botonera","No funciona correctamente la pantalla","Cinta en mal estado","Ruidos anormales", "Otros"]},{nombre:"Cerradora de cajas",checks:["Cuchillas en mal estado","Falta protección de cuchillas","Bandas en mal estado","Cama de rodillos con apoyo y/o patas faltantes","Resortes en mal estado","El fechador de cajas no funciona correctamente","La parada de emergencia no funciona","Ruidos anormales", "Otros"]}],
-      "Silos y Plastificadores": [{nombre:"Silo de huevo 1",checks:["El equipo no está funcionando correctamente","El condensador se encuentra sucio","Temperatura", "Otros"]},{nombre:"Silo de huevo 2",checks:["El equipo no está funcionando correctamente","El condensador se encuentra sucio","Temperatura", "Otros"]},{nombre:"Silo de harina repicky 1",checks:["Correas en mal estado","Filtros en mal estado o tapados","Bajo nivel de aceite","Presión de salida", "Otros"]},{nombre:"Silo de harina repicky 2",checks:["Correas en mal estado","Filtros en mal estado o tapados","Bajo nivel de aceite","Presión de salida", "Otros"]},{nombre:"Silo de harina y azucar 1",checks:["No está funcionando la rosca 1 de harina","No está funcionando la rosca 2 de harina","No está funcionando correctamente la rosca 1 de azúcar","No está funcionando correctamente la rosca 2 de azúcar","Rodamientos en mal estado","Cadenas de tracción en mal estado","No están funcionando correctamente el motoreductores","No está funcionando correctamente la saranda","No está funcionando correctamente la esclusa","Se encuentran pérdidas de materia prima","Se encuentran pérdidas de aceite", "Otros"]},{nombre:"Silo de harina y azucar 2",checks:["No está funcionando la rosca 3 de harina","No está funcionando la rosca 4 de harina","No está funcionando correctamente la rosca 3 de azúcar","No está funcionando correctamente la rosca 4 de azúcar","Rodamientos en mal estado","Cadenas de tracción en mal estado","No están funcionando correctamente el motoreductores","No está funcionando correctamente la saranda","No está funcionando correctamente la esclusa","Se encuentran pérdidas de materia prima","Se encuentran pérdidas de aceite", "Otros"]},{nombre:"Silo de harina línea 5",checks:["No está funcionando la rosca 5","No está funcionando la rosca 6","Rodamientos en mal estado","Cadenas de tracción en mal estado","No está funcionando correctamente el motoreductor","No está funcionando correctamente la saranda","No está funcionando correctamente la esclusa","Se encuentran pérdidas de materia prima","Se encuentran pérdidas de aceite", "Otros"]},{nombre:"Plastificador 1",checks:["El sistema no está funcionando correctamente","Agitador detenido","No está plastificando correctamente","Control de temperatura", "Otros"]},{nombre:"Plastificador 2",checks:["El sistema no está funcionando correctamente","Agitador detenido","No está plastificando correctamente","Control de temperatura", "Otros"]},{nombre:"Plastificador 3",checks:["El sistema no está funcionando correctamente","Agitador detenido","No está plastificando correctamente","Control de temperatura", "Otros"]},{nombre:"Plastificador 4",checks:["El sistema no está funcionando correctamente","Agitador detenido","No está plastificando correctamente","Control de temperatura", "Otros"]}]
-    };
+<main id="main"></main>
 
-    const TECNICOS = ['Alexis Monsalvo','Jose Garcia','Juan Escobar','Dante Vera','Tomas Lopez','Ruben Friedrich','Hector Alegre','Miguel Bianchi'];
-    const SUPERVISORES = ['Hugo Escobar','Franco Paez','Dario Gamba'];
+<script>
+// ── CONFIG ────────────────────────────────────────────────────────────────────
+const API_URL = ''; // Tu endpoint aquí
 
-    let app = {
-  linea: localStorage.getItem('linea') || 'Línea 1',
-  tecnico: localStorage.getItem('tecnico') || '',
-  supervisor: localStorage.getItem('supervisor') || '',
-  producto: localStorage.getItem('producto') || '',
-  datos: JSON.parse(localStorage.getItem('datos') || '{}'),
-  abiertos: JSON.parse(localStorage.getItem('abiertos') || '{}')
+const LINEAS = {
+  "Línea Envasado A": [
+    { nombre: "Llenadora rotativa", checks: ["El equipo no funciona correctamente","Fugas de producto en válvulas","Nivel de presión fuera de rango","Velocidad de llenado inconsistente","Las botoneras no responden","Ruidos anormales en cabezales","Temperatura de sellado incorrecta","Otros"] },
+    { nombre: "Etiquetadora", checks: ["Etiquetas desalineadas","Falla en sistema de avance","Rodillo de presión desgastado","Sensor de detección de etiquetas falla","Falta de lubricación en guías","Otros"] },
+    { nombre: "Capsuladora", checks: ["Torque de cierre incorrecto","Cápsula mal colocada","Falla en sistema neumático","Desgaste en mandril","Vibraciones anormales","Otros"] },
+    { nombre: "Transportador de salida", checks: ["Cinta desalineada","Velocidad irregular","Rodamientos con ruido","Guías de producto sueltas","Motor con temperatura elevada","Otros"] }
+  ],
+  "Planta Metalmecánica": [
+    { nombre: "Torno CNC #1", checks: ["Error en husillo principal","Refrigerante bajo o contaminado","Falla en sistema de cambio de herramienta","Guías de bancada con desgaste","Ruido en caja de engranajes","Pantalla HMI con errores","Otros"] },
+    { nombre: "Fresadora CNC #2", checks: ["Vibración en cabezal","Sistema de vacío con pérdidas","Mesa de trabajo con huelgo","Error de posicionamiento","Falla de encoder","Filtros de viruta tapados","Otros"] },
+    { nombre: "Soldadura MIG #3", checks: ["Inestabilidad del arco","Presión de gas protector baja","Alimentador de hilo con falla","Antorcha con desgaste","Cable de masa en mal estado","Otros"] },
+    { nombre: "Compresor de planta", checks: ["Presión de trabajo fuera de rango","Temperatura de descarga elevada","Pérdidas de aire en conexiones","Filtro de admisión tapado","Nivel de aceite bajo","Correas en mal estado","Otros"] }
+  ],
+  "Proceso Químico — Planta 2": [
+    { nombre: "Reactor R-101", checks: ["Temperatura fuera de set point","Agitador con vibración anormal","Sello mecánico con pérdidas","Válvula de control atascada","Sensor de pH con deriva","Presión interna anormal","Válvula de seguridad activa","Otros"] },
+    { nombre: "Bomba centrífuga B-01", checks: ["Cavitación audible","Sellos mecánicos con goteo","Temperatura de cojinetes elevada","Caudal por debajo del nominal","Vibración excesiva en eje","Ruido anormal en impulsor","Otros"] },
+    { nombre: "Intercambiador de calor E-201", checks: ["Diferencial de temperatura fuera de rango","Posible ensuciamiento de placas","Pérdida de fluido en juntas","Corrosión visible en nozzles","Flujo del lado carcaza reducido","Otros"] },
+    { nombre: "Sistema de ventilación", checks: ["Caudal de extracción reducido","Filtros con alta caída de presión","Rodamientos con ruido","Correas con desgaste","Temperatura de motor elevada","Damper sin respuesta","Otros"] }
+  ],
+  "Utilities / Servicios": [
+    { nombre: "Calderas — Sala de vapor", checks: ["Presión de operación fuera de rango","Nivel de agua bajo","Válvula de seguridad activada","Purgas no funcionan","Pérdida de vapor en líneas","Color de llama anormal","Otros"] },
+    { nombre: "Sistema de agua helada", checks: ["Temperatura de agua de retorno alta","Compresor con alta temperatura de descarga","Nivel de refrigerante bajo","Bomba de circulación ruidosa","Torre de enfriado con relleno tapado","Otros"] },
+    { nombre: "Tablero eléctrico principal", checks: ["Alarma de falla activa","Temperatura de tablero elevada","Disyuntor disparado","Borneras con señales de calentamiento","Iluminación de tablero sin funcionar","Puerta sin seguro","Otros"] },
+    { nombre: "Generador de emergencia", checks: ["Nivel de combustible bajo","Batería de arranque sin carga","Prueba de arranque fallida","Temperatura de motor elevada","Aceite bajo o contaminado","Otros"] }
+  ],
+  "Almacén y Expedición": [
+    { nombre: "Autoelevador Eléctrico #1", checks: ["Batería con baja carga","Horquillas con desgaste","Mástil con juego excesivo","Sistema hidráulico con pérdidas","Luces de seguridad sin funcionar","Bocina inoperativa","Otros"] },
+    { nombre: "Cinta de expedición", checks: ["Lona desalineada","Rodillos atascados","Encoder de velocidad falla","Fotoceldas de conteo sin señal","Motor con ruido","Otros"] },
+    { nombre: "Balanza de control", checks: ["Lectura fuera de calibración","Plataforma con suciedad","Indicador con error","Comunicación con sistema perdida","Otros"] }
+  ]
 };
 
-function save() {
-  localStorage.setItem('linea', app.linea);
-  localStorage.setItem('tecnico', app.tecnico);
-  localStorage.setItem('supervisor', app.supervisor);
-  localStorage.setItem('producto', app.producto);
-  localStorage.setItem('datos', JSON.stringify(app.datos));
-  localStorage.setItem('abiertos', JSON.stringify(app.abiertos));
+const TECNICOS = ['Carlos Mendoza','Laura Vidal','Diego Ferreyra','Ana Romero','Martín Suárez','Paula Gómez','Rodrigo Blanco','Sofía Torres'];
+const SUPERVISORES = ['Ing. Roberto Casas','Ing. Valeria Ortiz','Ing. Pablo Herrera'];
+
+const EMAILS_VALIDOS = ['demo@checkpro.app','tecnico@planta.com','supervisor@planta.com'];
+
+let currentTab = 'rutinas';
+let app = {
+  linea: 'Línea Envasado A',
+  tecnico: '',
+  supervisor: '',
+  userEmail: '',
+  datos: {},
+  abiertos: {}
+};
+
+// ── AUTH ───────────────────────────────────────────────────────────────────────
+function checkLogin() {
+  if (!app.userEmail) {
+    document.getElementById('loginModal').style.display = 'flex';
+    return false;
+  }
+  document.getElementById('loginModal').style.display = 'none';
+  return true;
 }
 
-function updateBtnGuardar() {
-  const btn = document.getElementById('btnGuardar');
-  if (!btn) return;
-  btn.disabled = !app.tecnico || !app.supervisor;
+function loginManual() {
+  const em = document.getElementById('manualEmail').value.trim();
+  if (!em.includes('@')) { showToast('⚠ Email inválido', 'warning'); return; }
+  app.userEmail = em;
+  if (checkLogin()) render();
 }
 
-function vibratePhone() {
-  if (navigator.vibrate) navigator.vibrate(10);
+// ── TABS ───────────────────────────────────────────────────────────────────────
+function switchTab(tab) {
+  currentTab = tab;
+  ['rutinas','tickets','inspeccion'].forEach(t => {
+    document.getElementById('tab-' + t)?.classList.remove('active');
+  });
+  document.getElementById('tab-' + tab).classList.add('active');
+  render();
 }
 
-function toggleCheck(ei, ci) {
-  if (!app.datos[ei]) app.datos[ei] = {};
-  if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
-  app.datos[ei][ci].m = !app.datos[ei][ci].m;
-  vibratePhone();
-  save();
-  updateCheckpointDOM(ei, ci);
-}
-
-function updateComment(ei, ci, value) {
-  if (!app.datos[ei]) app.datos[ei] = {};
-  if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
-  app.datos[ei][ci].c = value;
-  save();
-}
-
-function updateCheckpointDOM(ei, ci) {
-  const checkEl = document.querySelector(`[data-checkpoint="${ei}-${ci}"]`);
-  if (!checkEl) return;
-  const d = app.datos[ei] && app.datos[ei][ci];
-  if (d && d.m) checkEl.classList.add('marcado');
-  else checkEl.classList.remove('marcado');
-}
-
-function toggleEquipoDOM(ei) {
-  const equipoEl = document.querySelector(`[data-equipo="${ei}"]`);
-  if (!equipoEl) return;
-  if (app.abiertos[ei]) equipoEl.classList.add('abierto');
-  else equipoEl.classList.remove('abierto');
-}
-
+// ── RENDER ─────────────────────────────────────────────────────────────────────
 function render() {
+  if (!checkLogin()) return;
+  currentTab === 'tickets' ? renderTickets() : renderRutinas();
+}
+
+function renderTickets() {
+  document.getElementById('main').innerHTML = `
+    <div class="status-bar">
+      <div class="status-user"><span class="material-icons-round">account_circle</span>${app.userEmail}</div>
+      <button class="btn-logout" onclick="app.userEmail=''; checkLogin()">
+        <span class="material-icons-round" style="font-size:14px;">logout</span>
+      </button>
+    </div>
+    <div class="section">
+      <div class="section-label">Nuevo ticket de mantenimiento</div>
+      <div class="field" style="margin-bottom:12px;">
+        <label class="label">Categoría</label>
+        <select id="tCat">
+          <option>Mecánico</option><option>Eléctrico</option>
+          <option>Instrumentación</option><option>Civil / Edilicio</option><option>Otro</option>
+        </select>
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label class="label">Área / Ubicación</label>
+        <input type="text" id="tArea" placeholder="Ej: Sala de bombas — Planta 2">
+      </div>
+      <div class="field" style="margin-bottom:12px;">
+        <label class="label">Descripción del problema</label>
+        <textarea id="tDesc" placeholder="Detallá el problema encontrado..." style="min-height:110px;"></textarea>
+      </div>
+      <div class="field" style="margin-bottom:20px;">
+        <label class="label">Urgencia</label>
+        <div class="ticket-urgency-row">
+          <div class="urgency-chip selected-low"  onclick="selectUrgency(this,'Baja')">Baja</div>
+          <div class="urgency-chip selected-med"  onclick="selectUrgency(this,'Media')">Media</div>
+          <div class="urgency-chip"               onclick="selectUrgency(this,'Alta')">Alta</div>
+        </div>
+      </div>
+      <button class="btn-primary" onclick="guardarTicket()" style="width:100%;">
+        <span class="material-icons-round">send</span> Enviar ticket
+      </button>
+    </div>`;
+}
+
+let urgenciaSelected = 'Media';
+function selectUrgency(el, val) {
+  urgenciaSelected = val;
+  document.querySelectorAll('.urgency-chip').forEach(c => {
+    c.classList.remove('selected-low','selected-med','selected-high');
+  });
+  el.classList.add(val === 'Baja' ? 'selected-low' : val === 'Media' ? 'selected-med' : 'selected-high');
+}
+
+function guardarTicket() {
+  const area = document.getElementById('tArea')?.value?.trim();
+  const desc = document.getElementById('tDesc')?.value?.trim();
+  if (!area || !desc) { showToast('⚠ Completá área y descripción', 'warning'); return; }
+  showToast('✓ Ticket registrado correctamente', 'success');
+  switchTab('rutinas');
+}
+
+function renderRutinas() {
   const equipos = LINEAS[app.linea] || [];
-  let html = '';
-
-  html += `<div class="section selector-linea">
-    <div class="field">
-      <label class="label">Selecciona Rutina</label>
-      <select onchange="app.linea=this.value; app.datos={}; app.abiertos={}; save(); render()">
-        ${Object.keys(LINEAS).map(l => `<option ${app.linea === l ? 'selected' : ''}>${l}</option>`).join('')}
-      </select>
+  let html = `
+    <div class="status-bar">
+      <div class="status-user"><span class="material-icons-round">account_circle</span>${app.userEmail}</div>
+      <button class="btn-logout" onclick="app.userEmail=''; checkLogin()">
+        <span class="material-icons-round" style="font-size:14px;">logout</span>
+      </button>
     </div>
-  </div>`;
-
-  html += `<div class="section grid5">
-    <div class="field">
-      <label class="label">Técnico *</label>
-      <select onchange="app.tecnico=this.value; save(); updateBtnGuardar()">
-        <option value="">Selecciona...</option>
-        ${TECNICOS.map(t => `<option ${app.tecnico === t ? 'selected' : ''}>${t}</option>`).join('')}
-      </select>
+    <div class="section">
+      <div class="field">
+        <label class="label">Planta / Zona de inspección</label>
+        <select class="zona-select" onchange="cambiarLinea(this.value)">
+          ${Object.keys(LINEAS).map(l => `<option ${app.linea===l?'selected':''}>${l}</option>`).join('')}
+        </select>
+      </div>
     </div>
-    <div class="field">
-      <label class="label">Supervisor *</label>
-      <select onchange="app.supervisor=this.value; save(); updateBtnGuardar()">
-        <option value="">Selecciona...</option>
-        ${SUPERVISORES.map(s => `<option ${app.supervisor === s ? 'selected' : ''}>${s}</option>`).join('')}
-      </select>
-    </div>
-    <div class="field">
-      <label class="label">Producto</label>
-      <input type="text" placeholder="¿Qué producto?" value="${app.producto}" onchange="app.producto=this.value; save()">
-    </div>
-    <div class="field">
-      <label class="label">Fecha</label>
-      <input type="text" value="${new Date().toLocaleDateString('es-AR')}" disabled>
-    </div>
-    <div class="field">
-      <label class="label">Hora</label>
-      <input type="text" value="${new Date().toLocaleTimeString('es-AR')}" disabled>
-    </div>
-  </div>`;
+    <div class="section grid2">
+      <div class="field">
+        <label class="label">Técnico responsable *</label>
+        <select onchange="app.tecnico=this.value; updateBtnGuardar()">
+          <option value="">— Seleccionar —</option>
+          ${TECNICOS.map(t=>`<option ${app.tecnico===t?'selected':''}>${t}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">Supervisor de turno *</label>
+        <select onchange="app.supervisor=this.value; updateBtnGuardar()">
+          <option value="">— Seleccionar —</option>
+          ${SUPERVISORES.map(s=>`<option ${app.supervisor===s?'selected':''}>${s}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field">
+        <label class="label">Fecha</label>
+        <input type="text" value="${new Date().toLocaleDateString('es-AR')}" disabled style="opacity:.5;">
+      </div>
+    </div>`;
 
   equipos.forEach((eq, ei) => {
-    html += `<div class="equipo ${app.abiertos[ei] ? 'abierto' : ''}" data-equipo="${ei}">
-      <div class="equipo-head" onclick="app.abiertos[${ei}]=!app.abiertos[${ei}]; vibratePhone(); save(); toggleEquipoDOM(${ei})">
-        <div class="equipo-nombre">${ei + 1}. ${eq.nombre}</div>
-        <div class="equipo-toggle">▼</div>
+    if (!app.datos[ei]) app.datos[ei] = {};
+    html += `<div class="equipo ${app.abiertos[ei]?'abierto':''}" data-equipo="${ei}">
+      <div class="equipo-head" onclick="toggleEquipo(${ei})">
+        <div class="equipo-nombre">
+          <span class="equipo-num">${ei+1}</span>${eq.nombre}
+        </div>
+        <div class="equipo-toggle"><span class="material-icons-round">expand_more</span></div>
       </div>
       <div class="equipo-body">`;
 
     eq.checks.forEach((cp, ci) => {
-      if (!app.datos[ei]) app.datos[ei] = {};
-      if (!app.datos[ei][ci]) app.datos[ei][ci] = {m: false, c: ''};
+      if (!app.datos[ei][ci]) app.datos[ei][ci] = { m: false, c: '' };
       const d = app.datos[ei][ci];
-      html += `<div class="checkpoint ${d.m ? 'marcado' : ''}" data-checkpoint="${ei}-${ci}">
+      html += `<div class="checkpoint ${d.m?'marcado':''}" data-cp="${ei}-${ci}">
         <div class="check-header">
-          <input type="checkbox" ${d.m ? 'checked' : ''} onchange="toggleCheck(${ei},${ci})">
           <div class="check-texto">${cp}</div>
+          <label class="toggle-switch">
+            <input type="checkbox" ${d.m?'checked':''} onchange="toggleCheck(${ei},${ci})">
+            <div class="toggle-slider"></div>
+          </label>
+          <div class="toggle-label">${d.m?'FALLA':'OK'}</div>
         </div>
         <div class="check-comment">
-          <textarea onchange="updateComment(${ei},${ci},this.value)" placeholder="Agregá detalles (opcional)...">${d.c}</textarea>
+          <textarea onchange="updateComent(${ei},${ci},this.value)"
+                    placeholder="Describí el hallazgo..." rows="2">${d.c}</textarea>
         </div>
       </div>`;
     });
@@ -356,252 +1087,254 @@ function render() {
     html += `</div></div>`;
   });
 
-  html += `<div class="botones">
-    <button class="btn-guardar" id="btnGuardar" onclick="guardar()" ${!app.tecnico || !app.supervisor ? 'disabled' : ''}>💾 Guardar</button>
-    <button class="btn-otro" onclick="app.datos={}; app.abiertos={}; save(); render()">🗑️ Limpiar</button>
-    <button class="btn-otro" onclick="exportar()">📥 Exportar</button>
+  html += `<div class="action-dock">
+    <button class="btn-ghost" onclick="limpiarDatos()" title="Limpiar">
+      <span class="material-icons-round">refresh</span>
+    </button>
+    <button class="btn-primary" id="btnGuardar" onclick="guardarRutina()"
+            ${!app.tecnico||!app.supervisor?'disabled':''}>
+      <span class="material-icons-round">send</span> Finalizar rutina
+    </button>
+    <button class="btn-ghost" onclick="exportarCSV()" title="Exportar">
+      <span class="material-icons-round">download</span>
+    </button>
   </div>`;
 
   document.getElementById('main').innerHTML = html;
 }
-function buildPayload() {
-  const equipos = LINEAS[app.linea] || [];
-  return {
-    fecha: new Date().toISOString(),
-    linea: app.linea,
-    tecnico: app.tecnico,
-    supervisor: app.supervisor,
-    producto: app.producto,
-    equipos: equipos.map((eq, ei) => ({
-      nombre: eq.nombre,
-      checks: eq.checks.map((cp, ci) => {
-        const d = (app.datos[ei] && app.datos[ei][ci]) || {m: false, c: ''};
-        return { texto: cp, marcado: d.m, comentario: d.c };
-      })
-    }))
-  };
-}
 
-function generarReporte(payload) {
-  const fecha = new Date(payload.fecha);
-  const fechaStr = fecha.toLocaleDateString('es-AR');
-  const horaStr = fecha.toLocaleTimeString('es-AR');
-
-  const totalChecks = payload.equipos.reduce((s, eq) => s + eq.checks.length, 0);
-  const novedades   = payload.equipos.reduce((s, eq) => s + eq.checks.filter(c => c.marcado).length, 0);
-  const ok          = totalChecks - novedades;
-
-  let equiposHtml = '';
-  payload.equipos.forEach(eq => {
-    const tieneNovedades = eq.checks.some(c => c.marcado);
-    const estadoEquipo   = tieneNovedades ? '⚠ Con novedades' : '✓ Sin novedades';
-    const colorEquipo    = tieneNovedades ? '#FEF3C7' : '#D1FAE5';
-    const colorBorde     = tieneNovedades ? '#F59E0B' : '#059669';
-
-    let checksHtml = '';
-    eq.checks.forEach(ch => {
-      const esNovedad = ch.marcado;
-      const bg    = esNovedad ? '#FEF3C7' : '#F0FDF4';
-      const borde = esNovedad ? '#F59E0B' : '#A7F3D0';
-      const icono = esNovedad ? '⚠' : '✓';
-      const color = esNovedad ? '#92400E' : '#065F46';
-      const peso  = esNovedad ? 'bold' : 'normal';
-
-      checksHtml += `
-        <div style="display:flex;gap:10px;align-items:flex-start;padding:8px 12px;
-                    background:${bg};border-left:3px solid ${borde};
-                    border-radius:6px;margin-bottom:6px;">
-          <span style="color:${color};font-weight:bold;min-width:18px;font-size:14px;">${icono}</span>
-          <div style="flex:1;">
-            <span style="font-size:13px;color:${color};font-weight:${peso};">${ch.texto}</span>
-            ${ch.marcado && ch.comentario
-              ? `<div style="font-size:12px;color:#92400E;margin-top:4px;font-style:italic;">— ${ch.comentario}</div>`
-              : ''}
-          </div>
-          <span style="font-size:11px;font-weight:bold;color:${color};white-space:nowrap;">
-            ${esNovedad ? 'NOVEDAD' : 'OK'}
-          </span>
-        </div>`;
-    });
-
-    equiposHtml += `
-      <div style="margin-bottom:16px;border:1px solid ${colorBorde};border-radius:10px;overflow:hidden;">
-        <div style="background:${colorEquipo};padding:10px 14px;display:flex;justify-content:space-between;align-items:center;">
-          <span style="font-weight:bold;font-size:14px;color:#064E3B;">${eq.nombre}</span>
-          <span style="font-size:12px;font-weight:bold;color:${tieneNovedades ? '#92400E' : '#065F46'};">${estadoEquipo}</span>
-        </div>
-        <div style="padding:10px 12px;">${checksHtml}</div>
-      </div>`;
-  });
-
-  const html = `<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Reporte Rutina PMP — ${payload.linea}</title>
-  <style>
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
-           background:#F0FDF4; color:#064E3B; }
-    .header { background:linear-gradient(135deg,#036A3B,#10b981);
-              padding:20px 24px; color:white; }
-    .header h1 { font-size:20px; font-weight:700; margin-bottom:4px; }
-    .header p  { font-size:13px; opacity:.9; }
-    .meta { background:white; border-bottom:1px solid #A7F3D0;
-            padding:14px 24px; display:grid;
-            grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; }
-    .meta-item label { font-size:10px; font-weight:700; color:#6B7280;
-                       text-transform:uppercase; letter-spacing:.5px; display:block; }
-    .meta-item span  { font-size:14px; font-weight:600; color:#064E3B; }
-    .kpis { display:grid; grid-template-columns:repeat(3,1fr);
-            gap:12px; padding:16px 24px; }
-    .kpi  { background:white; border-radius:10px; padding:14px;
-            text-align:center; border:1px solid #A7F3D0; }
-    .kpi .num  { font-size:28px; font-weight:700; }
-    .kpi .lbl  { font-size:11px; color:#6B7280; text-transform:uppercase;
-                 letter-spacing:.5px; margin-top:2px; }
-    .kpi.ok    { border-color:#059669; }
-    .kpi.ok .num { color:#059669; }
-    .kpi.nov   { border-color:#F59E0B; }
-    .kpi.nov .num { color:#D97706; }
-    .body { padding:0 24px 24px; }
-    .btn-pdf { display:block; width:100%; padding:14px;
-               background:#036A3B; color:white; border:none;
-               border-radius:10px; font-size:15px; font-weight:700;
-               cursor:pointer; margin:0 0 20px; letter-spacing:.5px; }
-    .firma { background:white; border:1px solid #A7F3D0; border-radius:10px;
-             padding:14px 16px; margin-bottom:16px; font-size:12px; color:#6B7280;
-             text-align:center; line-height:1.8; }
-    @media print {
-      .btn-pdf { display:none; }
-      body { background:white; }
-      .header { background:#036A3B !important; -webkit-print-color-adjust:exact; print-color-adjust:exact; }
-    }
-  </style>
-</head>
-<body>
-  <div class="header">
-    <h1>Rutina de Inspección PMP</h1>
-    <p>Pilares Compañía Alimenticia — Registro oficial de inspección</p>
-  </div>
-  <div class="meta">
-    <div class="meta-item"><label>Línea / Área</label><span>${payload.linea}</span></div>
-    <div class="meta-item"><label>Técnico</label><span>${payload.tecnico}</span></div>
-    <div class="meta-item"><label>Supervisor</label><span>${payload.supervisor}</span></div>
-    <div class="meta-item"><label>Producto</label><span>${payload.producto || '—'}</span></div>
-    <div class="meta-item"><label>Fecha</label><span>${fechaStr}</span></div>
-    <div class="meta-item"><label>Hora</label><span>${horaStr}</span></div>
-  </div>
-  <div class="kpis">
-    <div class="kpi"><div class="num">${totalChecks}</div><div class="lbl">Puntos inspeccionados</div></div>
-    <div class="kpi ok"><div class="num">${ok}</div><div class="lbl">Sin novedad</div></div>
-    <div class="kpi nov"><div class="num">${novedades}</div><div class="lbl">Con novedad</div></div>
-  </div>
-  <div class="body">
-    <button class="btn-pdf" onclick="window.print()">Guardar como PDF / Imprimir</button>
-    ${equiposHtml}
-    <div class="firma">
-      Este reporte fue generado automáticamente por el Sistema de Rutinas PMP de Pilares.<br>
-      Fecha y hora de generación: ${fechaStr} ${horaStr}<br>
-      Técnico responsable: <strong>${payload.tecnico}</strong> — Supervisor: <strong>${payload.supervisor}</strong>
-    </div>
-  </div>
-</body>
-</html>`;
-
-  const blob = new Blob([html], { type: 'text/html' });
-  const url  = URL.createObjectURL(blob);
-  window.open(url, '_blank');
-}
-
-async function guardar() {
-  if (!app.tecnico || !app.supervisor) {
-    alert('Selecciona técnico y supervisor');
-    return;
-  }
-
-  vibratePhone();
-
-  const payload = buildPayload();
-
-  // Backup local
-  let rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
-  let total = 0, marcados = 0;
-  payload.equipos.forEach(eq => {
-    eq.checks.forEach(ch => {
-      total++;
-      if (ch.marcado) marcados++;
-    });
-  });
-  rutinas.unshift({ ...payload, porcentaje: total ? Math.round(marcados * 100 / total) : 0 });
-  localStorage.setItem('rutinas', JSON.stringify(rutinas));
-
-  // Payload al Sheet: novedades + cobertura de equipos sin novedad
-  const payloadSheet = {
-    fecha: payload.fecha,
-    linea: payload.linea,
-    tecnico: payload.tecnico,
-    supervisor: payload.supervisor,
-    producto: payload.producto,
-    equipos: payload.equipos.map(eq => {
-      const conNovedad = eq.checks.filter(ch => ch.marcado);
-      if (conNovedad.length > 0) {
-        // Enviar solo los checks con novedad
-        return { nombre: eq.nombre, checks: conNovedad };
-      } else {
-        // Equipo sin novedades: una fila de cobertura
-        return {
-          nombre: eq.nombre,
-          checks: [{ texto: 'Inspección completada — sin novedades', marcado: true, comentario: '' }]
-        };
-      }
-    })
-  };
-
-  fetch(apiUrl, {
-  method: 'POST',
-  mode: 'no-cors',
-  headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-  body: 'payload=' + encodeURIComponent(JSON.stringify(payloadSheet))
-}).catch(err => console.warn('Rutina POST error:', err));
-  // Generar reporte antes de limpiar el estado
-  generarReporte(payload);
-
-  app.tecnico = ''; app.supervisor = ''; app.producto = '';
-  app.datos = {}; app.abiertos = {};
-  save();
+function cambiarLinea(val) {
+  app.linea = val;
+  app.datos = {};
+  app.abiertos = {};
   render();
 }
 
-function exportar() {
-  const rutinas = JSON.parse(localStorage.getItem('rutinas') || '[]');
-  if (!rutinas.length) { alert('Sin rutinas'); return; }
-  let csv = 'RUTINAS PMP - ' + new Date().toLocaleDateString('es-AR') + '\n\n';
-  rutinas.forEach(r => {
-    const equipos = LINEAS[r.linea] || [];
-    csv += r.linea + ' | ' + new Date(r.fecha).toLocaleDateString('es-AR') + ' | ' + r.tecnico + ' | ' + r.supervisor + ' | ' + r.producto + ' | ' + r.porcentaje + '%\n';
-    equipos.forEach((eq, ei) => {
-      let hay = false;
-      eq.checks.forEach((cp, ci) => {
-        if (r.datos[ei] && r.datos[ei][ci] && r.datos[ei][ci].m) {
-          if (!hay) { csv += '\n' + eq.nombre + ':\n'; hay = true; }
-          csv += '  • ' + cp;
-          if (r.datos[ei][ci].c) csv += ' - ' + r.datos[ei][ci].c;
-          csv += '\n';
-        }
-      });
-    });
-    csv += '\n' + '='.repeat(80) + '\n\n';
-  });
-  const blob = new Blob([csv], {type: 'text/csv'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'rutinas-pmp-' + new Date().toISOString().split('T')[0] + '.csv';
-  a.click();
+function toggleEquipo(ei) {
+  app.abiertos[ei] = !app.abiertos[ei];
+  const el = document.querySelector(`[data-equipo="${ei}"]`);
+  if (el) app.abiertos[ei] ? el.classList.add('abierto') : el.classList.remove('abierto');
 }
 
+function toggleCheck(ei, ci) {
+  if (!app.datos[ei]) app.datos[ei] = {};
+  if (!app.datos[ei][ci]) app.datos[ei][ci] = { m: false, c: '' };
+  app.datos[ei][ci].m = !app.datos[ei][ci].m;
+  const el = document.querySelector(`[data-cp="${ei}-${ci}"]`);
+  if (el) {
+    app.datos[ei][ci].m ? el.classList.add('marcado') : el.classList.remove('marcado');
+    const lbl = el.querySelector('.toggle-label');
+    if (lbl) lbl.textContent = app.datos[ei][ci].m ? 'FALLA' : 'OK';
+  }
+}
+
+function updateComent(ei, ci, val) {
+  if (!app.datos[ei]) app.datos[ei] = {};
+  if (!app.datos[ei][ci]) app.datos[ei][ci] = { m: false, c: '' };
+  app.datos[ei][ci].c = val;
+}
+
+function updateBtnGuardar() {
+  const btn = document.getElementById('btnGuardar');
+  if (btn) btn.disabled = !app.tecnico || !app.supervisor;
+}
+
+function limpiarDatos() {
+  if (!confirm('¿Limpiar la rutina actual?')) return;
+  app.datos = {}; app.abiertos = {};
+  render();
+}
+
+function guardarRutina() {
+  if (!app.tecnico || !app.supervisor) return;
+  showToast('✓ Rutina enviada al sistema', 'success');
+  app.tecnico = ''; app.supervisor = ''; app.datos = {}; app.abiertos = {};
+  render();
+}
+
+function exportarCSV() {
+  showToast('⬇ Exportando CSV...', 'info');
+}
+
+// ── INSPECCIÓN ─────────────────────────────────────────────────────────────────
+let inspPuntos = [];
+
+function abrirInspeccion() {
+  if (!app.tecnico || !app.supervisor) {
+    showToast('⚠ Seleccioná técnico y supervisor primero', 'warning');
+    return;
+  }
+  const meta = document.getElementById('insp-meta');
+  if (meta) meta.textContent = `👤 ${app.tecnico}  ·  🔍 ${app.supervisor}`;
+  inspPuntos = [];
+  renderPuntos();
+  agregarPunto();
+  document.getElementById('modalInspeccion').style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+function cerrarInspeccion() {
+  const hayDatos = inspPuntos.some(p => p.linea || p.equipo || p.checkpoint || p.obs.trim());
+  if (hayDatos && !confirm('¿Cerrar sin enviar? Se perderán los datos.')) return;
+  document.getElementById('modalInspeccion').style.display = 'none';
+  document.body.style.overflow = '';
+  inspPuntos = [];
+}
+
+function agregarPunto() {
+  inspPuntos.push({ linea: '', equipo: '', checkpoint: '', obs: '' });
+  renderPuntos();
+  setTimeout(() => {
+    const items = document.querySelectorAll('.insp-punto');
+    if (items.length) items[items.length-1].scrollIntoView({ behavior:'smooth', block:'nearest' });
+  }, 80);
+}
+
+function eliminarPunto(idx) {
+  if (inspPuntos.length <= 1) return;
+  inspPuntos.splice(idx, 1);
+  renderPuntos();
+}
+
+function renderPuntos() {
+  const c = document.getElementById('insp-container');
+  c.innerHTML = '';
+  inspPuntos.forEach((p, idx) => {
+    const lineasOpts = Object.keys(LINEAS).map(l =>
+      `<option value="${l}" ${p.linea===l?'selected':''}>${l}</option>`
+    ).join('');
+    const div = document.createElement('div');
+    div.className = 'insp-punto';
+    div.id = `ip-${idx}`;
+    div.innerHTML = `
+      <div class="insp-punto-header">
+        <span class="insp-punto-num">Punto ${idx+1}</span>
+        ${inspPuntos.length > 1
+          ? `<button class="insp-btn-del" onclick="eliminarPunto(${idx})" type="button">
+               <span class="material-icons-round" style="font-size:16px;">close</span>
+             </button>` : ''}
+      </div>
+      <div class="field">
+        <span class="label">Zona / Línea</span>
+        <select id="il-${idx}" onchange="onLineaChange(${idx})">
+          <option value="">— Seleccionar zona —</option>${lineasOpts}
+        </select>
+      </div>
+      <div id="ie-wrap-${idx}"></div>
+      <div id="ic-wrap-${idx}"></div>
+      <div class="field">
+        <span class="label">Observación</span>
+        <textarea id="io-${idx}" rows="3" placeholder="Describí el hallazgo..."
+          oninput="inspPuntos[${idx}].obs=this.value">${p.obs}</textarea>
+      </div>`;
+    c.appendChild(div);
+    if (p.linea) renderEquipo(idx);
+    if (p.equipo) renderCheckpoint(idx);
+  });
+}
+
+function onLineaChange(idx) {
+  inspPuntos[idx].linea = document.getElementById(`il-${idx}`).value;
+  inspPuntos[idx].equipo = '';
+  inspPuntos[idx].checkpoint = '';
+  renderEquipo(idx);
+  renderCheckpoint(idx);
+}
+
+function onEquipoChange(idx) {
+  inspPuntos[idx].equipo = document.getElementById(`iep-${idx}`).value;
+  inspPuntos[idx].checkpoint = '';
+  renderCheckpoint(idx);
+}
+
+function onCheckChange(idx) {
+  inspPuntos[idx].checkpoint = document.getElementById(`ich-${idx}`).value;
+}
+
+function renderEquipo(idx) {
+  const w = document.getElementById(`ie-wrap-${idx}`);
+  const linea = inspPuntos[idx].linea;
+  if (!linea || !LINEAS[linea]) { w.innerHTML = ''; return; }
+  const opts = LINEAS[linea].map(e => `<option value="${e.nombre}">${e.nombre}</option>`).join('');
+  w.innerHTML = `<div class="field"><span class="label">Equipo</span>
+    <select id="iep-${idx}" onchange="onEquipoChange(${idx})">
+      <option value="">— Seleccionar equipo —</option>${opts}
+    </select></div>`;
+  if (inspPuntos[idx].equipo) document.getElementById(`iep-${idx}`).value = inspPuntos[idx].equipo;
+}
+
+function renderCheckpoint(idx) {
+  const w = document.getElementById(`ic-wrap-${idx}`);
+  const eq = (LINEAS[inspPuntos[idx].linea]||[]).find(e => e.nombre === inspPuntos[idx].equipo);
+  if (!eq) { w.innerHTML = ''; return; }
+  const opts = eq.checks.map(c => `<option value="${c}">${c}</option>`).join('');
+  w.innerHTML = `<div class="field"><span class="label">Punto de control</span>
+    <select id="ich-${idx}" onchange="onCheckChange(${idx})">
+      <option value="">— Seleccionar punto —</option>${opts}
+    </select></div>`;
+  if (inspPuntos[idx].checkpoint) document.getElementById(`ich-${idx}`).value = inspPuntos[idx].checkpoint;
+}
+
+async function enviarInspeccion() {
+  const tecnico    = app.tecnico?.trim();
+  const supervisor = app.supervisor?.trim();
+  if (!tecnico || !supervisor) { showToast('⚠ Seleccioná técnico y supervisor', 'warning'); return; }
+
+  for (let i = 0; i < inspPuntos.length; i++) {
+    const p = inspPuntos[i];
+    if (!p.linea || !p.equipo || !p.checkpoint || !p.obs.trim()) {
+      showToast(`⚠ Completá todos los campos del Punto ${i+1}`, 'warning');
+      return;
+    }
+  }
+
+  const btn = document.getElementById('insp-btn-enviar');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="material-icons-round" style="animation:spin 1s linear infinite;">sync</span> Enviando...';
+
+  await new Promise(r => setTimeout(r, 1200)); // Demo delay
+
+  inspPuntos = [];
+  document.getElementById('modalInspeccion').style.display = 'none';
+  document.body.style.overflow = '';
+  showToast('✓ Inspección registrada y reportada', 'success');
+
+  btn.disabled = false;
+  btn.innerHTML = '<span class="material-icons-round">send</span> Enviar inspección';
+}
+
+// ── TOAST ──────────────────────────────────────────────────────────────────────
+function showToast(msg, tipo) {
+  let t = document.getElementById('cp-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'cp-toast';
+    document.body.appendChild(t);
+  }
+  const cfg = {
+    success: { bg: '#14532d', border: '#22c55e', color: '#86efac' },
+    warning: { bg: '#431407', border: '#f97316', color: '#fdba74' },
+    error:   { bg: '#450a0a', border: '#ef4444', color: '#fca5a5' },
+    info:    { bg: '#1e1b4b', border: '#818cf8', color: '#c7d2fe' }
+  };
+  const c = cfg[tipo] || cfg.info;
+  t.style.cssText = `
+    position:fixed; bottom:90px; left:50%; transform:translateX(-50%);
+    background:${c.bg}; color:${c.color};
+    border:1px solid ${c.border};
+    padding:11px 20px; border-radius:11px;
+    font-family:'Barlow Condensed',sans-serif;
+    font-weight:700; font-size:14px; letter-spacing:0.3px;
+    box-shadow:0 8px 24px rgba(0,0,0,0.4);
+    z-index:99999; opacity:1; transition:opacity 0.35s;
+    white-space:nowrap; max-width:90vw; pointer-events:none;`;
+  t.textContent = msg;
+  clearTimeout(t._t);
+  t._t = setTimeout(() => { t.style.opacity = '0'; }, 3000);
+}
+
+// ── INIT ───────────────────────────────────────────────────────────────────────
 render();
-  </script>
+</script>
 </body>
 </html>
